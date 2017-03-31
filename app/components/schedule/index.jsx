@@ -12,7 +12,7 @@ const LECTURES = API.getLectures();
 
 for (let x in LECTURES) {
 	DATA.push(LECTURES[x]);
-}
+};
 
 
 
@@ -23,9 +23,11 @@ class ScheduleApp extends React.Component {
 		this.state = {
 			displayedItem: DATA,
 		};
-	}
 
-	// addContact: function() {
+		this.handleSearch = this.handleSearch.bind(this);
+	};
+
+	// addContact() {
 	// 	let date = document.querySelector('#date').value;
 	// 	let lecture = document.querySelector('#lecture').value;
 	// 	let lecturer = document.querySelector('#lecturer').value;
@@ -47,9 +49,9 @@ class ScheduleApp extends React.Component {
 	// 	});
 	//
 	// 	this.setState({ // специальный метод React`a, который говорит что нужно перерендерить состояние компонента
-	// 		displayedItem: DATA
+	// 		displayedItem: displayedItem
 	// 	});
-	// },
+	// };
 
 
 	handleSearch(event) {
@@ -60,18 +62,17 @@ class ScheduleApp extends React.Component {
 
 			return searchValue.indexOf(searchQuery) !== -1;
 		});
-
 		this.setState({ // специальный метод React`a, который говорит что нужно перерендерить состояние компонента
 			displayedItem: displayedItem
 		});
-	}
+	};
 
 	render() {
 		return (
 			<div>
 				<input id='date' type='text' name='date' placeholder='date'/>
 				<input id='lecture' type='text' name='lecture' placeholder='lecture'/>
-				<input id='lecturer' type='text' name='lecturer' placeholder='lecturer'/>
+				<input id='teacher' type='text' name='teacher' placeholder='teacher'/>
 				<input id='location' type='text' name='location' placeholder='location'/>
 				<input id='school' type='text' name='school' placeholder='school'/>
 				<button name='add' onClick={this.addContact} style={{height: 30 + 'px', width: 50 + 'px', marginTop: 10 + 'px'}}>Add</button><br/>
@@ -86,7 +87,7 @@ class ScheduleApp extends React.Component {
 									date={new Date(+el.date).getDate()}
 									month={convert(+el.date)}
 									lecture={el.lecture}
-									lecturer={el.lecturer.name}
+									teacher={el.teacher.name}
 									location={el.location}
 									school={el.school}
 									city={el.city}

@@ -3,7 +3,7 @@ const LECTURES = {
     id: '2855f2ef-bc6e-46ad-8c3f-6b1431e78ddd',
     date: '1476748800000',
     lecture: 'Лекция 1. Идея, исследование, концепт (Часть 1)',
-    lecturer: {
+    teacher: {
         name: 'Антон Тен',
         id: '31be6f6e-a45c-4412-916f-8c759ebfa674'
     },
@@ -24,7 +24,7 @@ const LECTURES = {
     id: 'f001c8d3-0044-41d3-819b-f3a461f6f15c',
     date: '1476748800000',
     lecture: 'Лекция 2. Идея, исследование, концепт (Часть 2)',
-    lecturer: {
+    teacher: {
         name: 'Антон Тен',
         id: '31be6f6e-a45c-4412-916f-8c759ebfa674'
     },
@@ -44,7 +44,7 @@ const LECTURES = {
     id: '75a3a073-2b5c-4c62-86da-d39e91977b5a',
     date: '1476835200000',
     lecture: 'Лекция 1. Java Blitz (Часть 1)',
-    lecturer: {
+    teacher: {
         name: 'Эдуард Мацуков',
         id: '2f6f2ef4-eb01-45e2-a846-894d547aae4f'
     },

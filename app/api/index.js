@@ -8,10 +8,10 @@ class API {
 
 		const lecturesArray = Object.keys(LECTURES); //массив ключей объекта LECTURES
 		lecturesArray.map((id) => {
-			const teacherId = [LECTURES[id].lecturer.id];
+			const teacherId = [LECTURES[id].teacher.id];
 
 			this.teachers[teacherId] = {
-				name: LECTURES[id].lecturer.name,
+				name: LECTURES[id].teacher.name,
 				lectures: [
 					...(this.teachers[teacherId] && this.teachers[teacherId].lectures || []),
 					id
@@ -32,14 +32,13 @@ class API {
 
 			return id;
 		});
-        console.log(this.teachers);
 	}
 
 	getLectures() {
 	    return this.lectures;
 	};
 	//
-	// getLecturers() {
+	// getteachers() {
 	// 	this.rooms = DATA.map(function(el) {
 	// 		return el.room
 	// 	});
@@ -52,7 +51,7 @@ class API {
 	//
 	// 	const {
 	// 		date,
-	// 		lecturer,
+	// 		teacher,
 	// 	} = item
 	//
 	// 	return true

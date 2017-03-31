@@ -1,24 +1,6 @@
 @import "fonts"
 @import "vars"
-
-*::-webkit-input-placeholder
-	color: #666
-	opacity: 1
-
-*:-moz-placeholder
-	color: #666
-	opacity: 1
-
-*::-moz-placeholder
-	color: #666
-	opacity: 1
-
-*:-ms-input-placeholder
-	color: #666
-	opacity: 1
-
-html, body
-	height: 100%
+@import "media"
 
 body
 	font-size: 14px
@@ -30,66 +12,76 @@ body
 	max-width: 960px
 	margin: 0 auto
 	div
+		// font-size: 10px
 		margin: 3px
 		// box-shadow: 1px 1px 2px #555246
-
 
 .schedule-container__line
 	display: flex
 	background-color: #24201f
-	// background-color: $accent
 	border-radius: 15px
-	// padding-bottom: 5px
-	// background-image: url(background.jpg)
 
 .schedule-container__line__block_1
-	width: 75px
+	width: 90px
 	color: #fff
 	display: flex
 	align-items: center
 	justify-content: center
 	&__date
-		text-transform: uppercase
+		display: flex
+		flex-flow: column
+		padding-bottom: 4px
 	&__date__number
+		text-align: center
 		font-size: 45px
 		letter-spacing: -1px
-		// font-weight: bold
-
+	&__month
+		text-transform: uppercase
 
 .schedule-container__line__block_2
+	display: flex
+	justify-content: center
+	flex-flow: column
 	flex: 6 0 200px
 	color: #fff
-	div
-		margin-top: 5.5px
 	&__lecture
 		font-size: 18px
 	&__lecturer
 		font-size: 12px
 		a
 			text-decoration: none
+			// color: #fff
 	&__company
 		font-size: 11px
 		color: #e28315
 
 .schedule-container__line__block_3
-	width: 90px
+	display: flex
+	justify-content: center
+	flex-flow: column
+	width: 110px
 	color: #e28315
 	font-size: 12px
 	&__school
 		line-height: 22px
-		// min-height: 20px
 
 .schedule-container__line__block_4
-	width: 100px
+	min-width: 120px
+	display: flex
+	justify-content: center
+	flex-flow: column
 	color: #e28315
 	font-size: 13px
-	div
-		margin-top: 6.5px
-		// margin-top: 6.5px
-		// min-height: 20px
-	&__time
-		// line-height: 22px
+	padding-right: 7px
 
+
+.fa-clock-o
+	margin-right: 3px
+.fa-home
+	margin-right: 3px
+	margin-left: -1px
+.fa-map-marker
+	margin: 0 5px 0 2px
 
 
 @import "media" // Всегда в конце

@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './app/index.js',
+  entry: './app/index.jsx',
   output: {
     filename: "./build/bundle.js",
     sourceMapFilename: "./build/bundle.map"
@@ -8,7 +8,7 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/
       }

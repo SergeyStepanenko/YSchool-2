@@ -13,15 +13,30 @@
 
 
 /* Small Devices, Tablets */
+@media only screen and (max-width : 480px)
+	/**/
+
+    /* Extra Small Devices, Phones */
 @media only screen and (max-width : 768px)
 	/**/
 
 
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px)
-  .container
-    padding: 0px
-    font-size: 10px
+    /* Custom */
+@media only screen and (max-width : 600px)
+  .schedule-container__line
+      flex-flow: column
+      align-items: center
+      &__block_2
+          flex: 6 0 auto
+          align-items: center
+          text-align: center
+          padding: 0 5px
+      &__block_3
+          width: 100%
+          align-items: center
+      &__block_4
+          width: 100%
+          flex-flow: row
 
 /* Custom, iPhone Retina */
 @media only screen and (max-width : 320px)

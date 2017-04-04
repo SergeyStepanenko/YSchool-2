@@ -1,62 +1,67 @@
 const LECTURES = {
   '2855f2ef-bc6e-46ad-8c3f-6b1431e78ddd': {
     id: '2855f2ef-bc6e-46ad-8c3f-6b1431e78ddd',
-    date: '1476748800000',
+    date: '1476781200000',
     lecture: 'Лекция 1. Идея, исследование, концепт (Часть 1)',
     teacher: {
         name: 'Антон Тен',
         id: '31be6f6e-a45c-4412-916f-8c759ebfa674'
     },
     location: 'Москва',
-    school: 'Школа Мобильного Дизайна',
+    school: {
+        name: 'Школа Мобильного Дизайна',
+        id: 'a38ba59b-9435-4e75-90ff-3dbd19e25faf',
+    },
     classRoom: {
         name: 'Зеленый кит',
         id: '49453002-4467-47a9-8f89-9c9d6f72954c',
         maxStudents: 20,
     },
-
-    startTime: '12:00',
-    endTime: '13:30',
+    endTime: '1476786600000',
     company: 'Yandex',
     isDeleted: false,
   },
   'f001c8d3-0044-41d3-819b-f3a461f6f15c': {
     id: 'f001c8d3-0044-41d3-819b-f3a461f6f15c',
-    date: '1476748800000',
+    date: '1476788400000',
     lecture: 'Лекция 2. Идея, исследование, концепт (Часть 2)',
     teacher: {
         name: 'Антон Тен',
         id: '31be6f6e-a45c-4412-916f-8c759ebfa674'
     },
     location: 'Москва',
-    school: 'Школа Мобильного Дизайна',
+    school: {
+        name: 'Школа Мобильного Дизайна',
+        id: 'a38ba59b-9435-4e75-90ff-3dbd19e25faf',
+    },
     classRoom: {
         name: 'Зеленый кит',
         id: '49453002-4467-47a9-8f89-9c9d6f72954c',
         maxStudents: 20,
     },
-    startTime: '14:00',
-    endTime: '15:30',
+    endTime: '1476793800000',
     company: 'Yandex',
     isDeleted: false,
   },
   '75a3a073-2b5c-4c62-86da-d39e91977b5a': {
     id: '75a3a073-2b5c-4c62-86da-d39e91977b5a',
-    date: '1476835200000',
+    date: '1476867600000',
     lecture: 'Лекция 1. Java Blitz (Часть 1)',
     teacher: {
         name: 'Эдуард Мацуков',
         id: '2f6f2ef4-eb01-45e2-a846-894d547aae4f'
     },
     location: 'Москва',
-    school: 'Школа Мобильной Разработки',
+    school: {
+        name: 'Школа Мобильной Разработки',
+        id: '68310c4d-8722-4333-8698-37b88a97aa2e',
+    },
     classRoom: {
         name: 'Красный кит',
         id: 'f5090809-38a3-4d2f-a11f-a6c630011358',
         maxStudents: 25,
     },
-    startTime: '12:00',
-    endTime: '13:30',
+    endTime: '1476873000000',
     company: 'Yandex',
     isDeleted: false,
   },

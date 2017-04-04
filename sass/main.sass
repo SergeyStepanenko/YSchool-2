@@ -8,6 +8,7 @@ body
 	overflow-x: hidden
 	background-color: #FEFEFE
 
+.header,
 .schedule-container
 	max-width: 960px
 	margin: 0 auto
@@ -18,11 +19,14 @@ body
 
 .schedule-container__line
 	display: flex
-	background-color: #24201f
+	background-color: $default-color
 	border-radius: 15px
+	&-header
+		font-size: 24px
+		height: 70px
 
 .schedule-container__line__block_1
-	width: 90px
+	width: 150px
 	color: #fff
 	display: flex
 	align-items: center
@@ -37,6 +41,9 @@ body
 		letter-spacing: -1px
 	&__month
 		text-transform: uppercase
+	&-header
+		display: flex
+		flex-wrap: wrap
 
 .schedule-container__line__block_2
 	display: flex
@@ -50,7 +57,6 @@ body
 		font-size: 12px
 		a
 			text-decoration: none
-			// color: #fff
 	&__company
 		font-size: 11px
 		color: #e28315
@@ -64,16 +70,24 @@ body
 	font-size: 12px
 	&__school
 		line-height: 22px
+	&-header
+		font-size: 24px
 
 .schedule-container__line__block_4
-	min-width: 120px
+	min-width: 150px
 	display: flex
 	justify-content: center
 	flex-flow: column
 	color: #e28315
 	font-size: 13px
 	padding-right: 7px
+	&-header
+		font-size: 24px
 
+.schedule-header
+	display: flex
+	justify-content: center
+	font-size: 26px
 
 .fa-clock-o
 	margin-right: 3px
@@ -82,6 +96,13 @@ body
 	margin-left: -1px
 .fa-map-marker
 	margin: 0 5px 0 2px
+
+.input
+    background-color: $default-color
+    color: white
+
+input[type=text]:focus
+
 
 
 @import "media" // Всегда в конце

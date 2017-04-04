@@ -1,20 +1,20 @@
 import React from 'react';
 
 import Schedule from './schedule.jsx';
-import API from '../../api'; //все данные о лекциях
-import convert from '../../utils/convert.js';
+import API from '../../api';
+import convert from '../../utils/convert.js'; //конвертирую падеж названия месяца (прим. январь -> января)
+import properTime from '../../utils/time.js'; //исправляю нюанс вывода времени (прим. 12:0 -> 12:00 (с учетом проверки))
+import moment from 'moment';
 
 API.initialize();
 
 const DATA = [];
 const LECTURES = API.getLectures();
-
+const TEACHERS = API.getTeachers();
 
 for (let x in LECTURES) {
-	DATA.push(LECTURES[x]);
+	DATA.push(LECTURES[x]); //создаю массив объектов для удобства работы в React
 };
-
-
 
 class ScheduleApp extends React.Component {
 	constructor() {
@@ -24,45 +24,21 @@ class ScheduleApp extends React.Component {
 			displayedItem: DATA,
 		};
 
-		this.handleSearch = this.handleSearch.bind(this);
+		this.filter = this.filter.bind(this);
 	};
 
-	// addContact() {
-	// 	let date = document.querySelector('#date').value;
-	// 	let lecture = document.querySelector('#lecture').value;
-	// 	let lecturer = document.querySelector('#lecturer').value;
-	// 	let location = document.querySelector('#location').value;
-	// 	let school = document.querySelector('#date').value;
-	// 	let arr = DATA.map(function(el) {
-	// 		return el.id;
-	// 	});
-	//
-	// 	let id = Math.max.apply(null, arr) + 1;
-	//
-	// 	DATA.push({
-	// 		id: id,
-	// 		date: date,
-	// 		lecture: lecture,
-	// 		lecturer: lecturer,
-	// 		location: location,
-	// 		school: school,
-	// 	});
-	//
-	// 	this.setState({ // специальный метод React`a, который говорит что нужно перерендерить состояние компонента
-	// 		displayedItem: displayedItem
-	// 	});
-	// };
+	filter() {
+		let dateFrom = document.querySelector('#dateFrom').value.replace('-', ', '),
+			dateTo = document.querySelector('#dateTo').value.replace('-', ', '),
+			dF = new Date(dateFrom).getTime(),
+			dT = new Date(dateTo).getTime(),
+			t = document.querySelector('#teacher').value,
+			sC = document.querySelector('#school').value,
+			cR = document.querySelector('#classRoom').value;
 
+		let displayedItem = API.filter(dF, dT, t, sC, cR);
 
-	handleSearch(event) {
-		event.persist();
-		let searchQuery = event.target.value.toLowerCase();
-		let displayedItem = DATA.filter(function(el) {
-			let searchValue = el.lecture.toLowerCase();
-
-			return searchValue.indexOf(searchQuery) !== -1;
-		});
-		this.setState({ // специальный метод React`a, который говорит что нужно перерендерить состояние компонента
+		this.setState({
 			displayedItem: displayedItem
 		});
 	};
@@ -70,16 +46,35 @@ class ScheduleApp extends React.Component {
 	render() {
 		return (
 			<div>
-				<input id='date' type='text' name='date' placeholder='date'/>
-				<input id='lecture' type='text' name='lecture' placeholder='lecture'/>
-				<input id='teacher' type='text' name='teacher' placeholder='teacher'/>
-				<input id='location' type='text' name='location' placeholder='location'/>
-				<input id='school' type='text' name='school' placeholder='school'/>
-				<button name='add' onClick={this.addContact} style={{height: 30 + 'px', width: 50 + 'px', marginTop: 10 + 'px'}}>Add</button><br/>
-				<span>Search contact</span><br/>
-				<input type='text' placeholder='lecture name' onChange={this.handleSearch}/><br/>
-				<strong style={{fontSize: 20 + 'px'}}>Расписание лекций</strong>
 				<div className='schedule-container'>
+					<div className='schedule-container__line schedule-container__line schedule-container__line schedule-container__line-header'>
+						<div className='schedule-container__line__block_1 schedule-container__line__block_1-header'>
+							<input id='dateFrom' className='input' type='date' onChange={this.filter}></input>
+							<input id='dateTo' className='input' type='date' onChange={this.filter}></input>
+						</div>
+						<div className='schedule-container__line__block_2 schedule-container__line__block_2-header'>
+							<select id='teacher' className='input' onChange={this.filter}>
+								<option>Все</option>
+							    <option>Антон Тен</option>
+							    <option>Эдуард Мацуков</option>
+							</select>
+						</div>
+						<div className='schedule-container__line__block_3 schedule-container__line__block_3-header'>
+							<select id='school' className='input' onChange={this.filter}>
+								<option>Все</option>
+							    <option>Школа Мобильного Дизайна</option>
+							    <option>Школа Мобильной Разработки</option>
+							    <option>Школа Разработки Интерфейсов</option>
+							</select>
+						</div>
+						<div className='schedule-container__line__block_4 schedule-container__line__block_4-header'>
+							<select id='classRoom' className='input' onChange={this.filter}>
+								<option>Все</option>
+							    <option>Зеленый кит</option>
+							    <option>Красный кит</option>
+							</select>
+						</div>
+					</div>
 					{
 						this.state.displayedItem.map(el => { // возвращаем объекты, которые находятся в состояни компоненты displayedItem
 						   return < Schedule
@@ -89,13 +84,13 @@ class ScheduleApp extends React.Component {
 									lecture={el.lecture}
 									teacher={el.teacher.name}
 									location={el.location}
-									school={el.school}
+									school={el.school.name}
 									city={el.city}
 									company={el.company}
 									room={el.classRoom}
-									startTime={el.startTime}
+									startTime={properTime(el.date)}
 									classRoom={el.classRoom.name}
-									endTime={el.endTime}/>
+									endTime={properTime(el.endTime)}/>
 						})
 					}
 				</div>
@@ -105,3 +100,12 @@ class ScheduleApp extends React.Component {
 }
 
 export default ScheduleApp;
+
+// const lecturesArray = Object.keys(LECTURES);
+// let schoolArr = [];
+//
+// for (var i = 0; i < lecturesArray.length; i++) {
+// 	schoolArr.push(LECTURES[lecturesArray[i]].school.id)
+// }
+//
+// console.log(schoolArr);

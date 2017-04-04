@@ -1,8 +1,8 @@
 import React from 'react';
 
 export default function Schedule(props) {
-	const {date, lecture, teacher, location, school, city, company, room, startTime, endTime, month, classRoom} = props; // присваиваем переменной обращение к свойствам объектов, чтобы не писать каждый раз this.props
-	// далее отрисуем див с css классом friend
+	const {date, lecture, teacher, location, school, city, company, startTime, endTime, month, classRoom} = props; // присваиваем переменной обращение к свойствам объектов, чтобы не писать каждый раз this.props
+	// далее отрисуем див
 	return <div className='schedule-container__line'>
 				<div className='schedule-container__line__block_1'>
 					<div className='schedule-container__line__block_1__date'>

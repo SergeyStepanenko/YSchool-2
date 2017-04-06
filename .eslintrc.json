@@ -1,0 +1,75 @@
+{
+    "extends": "airbnb",
+    "env": {
+    "browser": "true",
+    "node": "true"
+},
+    "rules": {
+        "linebreak-style": "off",
+        "newline-before-return": ["error"],
+        "space-before-blocks": ["error"],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+        "no-implicit-coercion": [2, { "allow": [] }],
+        "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
+        "arrow-parens": ["error", "always"],
+        "arrow-body-style": "off",
+        "consistent-return": "off",
+        "import/no-extraneous-dependencies": "off",
+        "import/no-unresolved": "off",
+        "import/first": "error",
+        "indent": ["warn", 4],
+        "semi": ["error", "always"],
+        "comma-dangle": ["warn", {
+            "arrays": "ignore",
+            "objects": "always-multiline",
+            "imports": "ignore",
+            "exports": "ignore",
+            "functions": "ignore"
+        }],
+        "func-names": ["warn", "never"],
+        "no-underscore-dangle": "off",
+        "no-console": "warn",
+        "no-static-element-interactions": "off",
+        "no-plusplus": "off",
+        "object-curly-spacing": "off",
+        "prefer-template": "off",
+        "react/jsx-closing-bracket-location": [
+    2, {
+        "selfClosing": "props-aligned",
+        "nonEmpty": "props-aligned"
+        }
+    ],
+        "react/react-in-jsx-scope": "off",
+        "react/forbid-prop-types": ["error", { "forbid": [] }],
+        "import/extensions": "off",
+        "class-methods-use-this": "off",
+        "prefer-rest-params": "off",
+        "react/sort-comp": "off",
+        "react/no-unused-prop-types": "error",
+        "react/no-children-prop": "off",
+        "jsx-a11y/img-has-alt": "off",
+        "jsx-a11y/no-static-element-interactions": "off",
+        "react/jsx-space-before-closing": ["error", "never"],
+        "no-nested-ternary": "off",
+        "no-param-reassign": "off",
+        "max-len": "off",
+        "no-restricted-syntax": "off",
+        "jsx-a11y/label-has-for": "off",
+        "jsx-a11y/anchor-has-content": "off",
+        "react/no-danger": "off",
+        "no-continue": "off",
+        "no-cond-assign": "off",
+        "no-mixed-operators": "off",
+        "no-unneeded-ternary": ["error"]
+},
+    "globals": {
+        "React": "true",
+        "ReactDOM": "true",
+        "fetch": "true",
+        "__DEV__": "true",
+        "window": "true",
+        "document": "true",
+        "global": "true",
+        "navigator": "true"
+    }
+}

@@ -6,11 +6,21 @@
   <title>Расписание лекций</title>
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css"> <!-- Добавил для иконок в расписании 31kb-->
+  <script src="https://www.gstatic.com/firebasejs/3.7.5/firebase.js"></script>
 </head>
 <body>
-
     <div id="root"></div>
-
+    <script>
+      var config = {
+        apiKey: "AIzaSyAxmoTVvNtBqcN_3AGZ3sPtciq6xnnnaAQ",
+        authDomain: "yandex-42387.firebaseapp.com",
+        databaseURL: "https://yandex-42387.firebaseio.com",
+        projectId: "yandex-42387",
+        storageBucket: "yandex-42387.appspot.com",
+        messagingSenderId: "146556623993"
+      };
+      firebase.initializeApp(config);
+    </script>
     <script src="build/bundle.js"></script>
 </body>
 </html>

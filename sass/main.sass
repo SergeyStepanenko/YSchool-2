@@ -98,11 +98,19 @@ body
 	margin: 0 5px 0 2px
 
 .input
-    background-color: $default-color
-    color: white
+	color: white
+	background-color: $default-color
+	border: 1px solid white
 
-input[type=text]:focus
+.api
+    border: 2px solid black
+    width: 320px
+    margin: 0 auto
+    &__header
+        text-align: center
 
-
+input
+    width: 98%
+    margin: 5px 0
 
 @import "media" // Всегда в конце

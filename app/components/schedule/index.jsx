@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import createFragment from 'react-addons-create-fragment';
 
 import API from '../../api';
 import convert from '../../utils/convert.js'; // конвертирую падеж названия месяца (прим. январь -> января)
@@ -12,24 +13,37 @@ import API_GUI from '../schedule/api_gui.jsx';
 API.initialize();
 
 const database = firebase.database();
+const rootRef = database.ref('lectures');
+
 const DATA = [];
-let FBDATA = [];
 const LECTURES = API.getLectures();
 const TEACHERS = API.getTeachers();
+let arr = [];
 
 for (const x in LECTURES) {
     if (Object.prototype.hasOwnProperty.call(LECTURES, x)) {
         DATA.push(LECTURES[x]);
     }
 }
+// let firebaseArray = [];
+// database.ref('/lectures/').once('value').then((snapshot) => {
+//     const firebaseObject = snapshot.val();
+//
+//     for (const x in firebaseObject) {
+//         if (Object.prototype.hasOwnProperty.call(firebaseObject, x)) {
+//             firebaseArray.push(firebaseObject[x]);
+//         }
+//     }
+//
+//     console.log(firebaseArray);
+// });
 
 export default class ScheduleApp extends React.Component {
     constructor() {
         super();
 
         this.state = {
-            // displayedItem: [],
-            test: 1
+            displayedItem: [],
         };
 
         this.filter = this.filter.bind(this);
@@ -37,45 +51,20 @@ export default class ScheduleApp extends React.Component {
     }
 
     componentDidMount() {
-        const rootRef = database.ref('test');
         rootRef.on('value', snap => {
             let Obj = snap.val();
-            let keys = Object.keys(Obj);
-            let arr = [];
-
-            for (let x in Obj) {
-                if (Obj.hasOwnProperty(x)) {
-                    arr.push(Obj[x])
+            for (const x in Obj) {
+                if (Object.prototype.hasOwnProperty.call(Obj, x)) {
+                    arr.push(Obj[x]);
                 }
             }
-
-            let displayedItem = arr;
-
             this.setState({
-                // displayedItem: FBDATA
-                // test: 2
-                displayedItem: displayedItem
+                displayedItem: arr
             });
         });
     }
-        // const rootRef = database.ref('lectures');
-        // rootRef.on('value', gotData);
-        //
-        // function gotData(data) {
-        //     const Y = data.val();
-        //     let keys = Object.keys(Y);
-        //
-        //     for (var x in Y) {
-        //         if (Y.hasOwnProperty(x)) {
-        //             FBDATA.push(Y[x]);
-        //         }
-        //     }
-        //
-        //     return FBDATA;
-        // }
-        // this.setState({
-        //     displayedItem: gotData()
-        // });
+
+
 
 
     filter() {
@@ -135,20 +124,8 @@ export default class ScheduleApp extends React.Component {
                   </select>
                 </div>
               </div>
-              {/* {
-                  this.state.test.map((el) => {
-                      return (
-                        <Test
-                          key={el.id}
-                          val={el.val}
-                          val2={el.val2}
-                        />
-                      )
-                  })
-              } */}
 
-
-              {/* {
+              {
     this.state.displayedItem.map((el) => {
         return (
           <Schedule
@@ -167,7 +144,7 @@ export default class ScheduleApp extends React.Component {
             endTime={properTime(el.endTime)}
             />);
     })
-            } */}
+            }
             </div>
           </div>
         );

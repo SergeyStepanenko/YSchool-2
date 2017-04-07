@@ -1,21 +1,14 @@
 import LECTURES from '../../js/lectures';
+// import ScheduleApp from '../components/schedule/index.jsx'
 
-let DATA = [];
 const database = firebase.database();
 const lectures = database.ref('lectures');
 const teachers = database.ref('teachers');
 const school = database.ref('school');
 
-for (const x in LECTURES) {
-    if (Object.prototype.hasOwnProperty.call(LECTURES, x)) {
-        DATA.push(LECTURES[x]);
-    }
-}
-
 class API {
-    initialize() {
-        this.lectures = {};
-        this.lectures = LECTURES;
+    initialize(FIREBASEDATA) {
+        this.lectures = FIREBASEDATA;
         this.teachers = {};
         this.classRooms = {};
 
@@ -55,8 +48,8 @@ class API {
         return this.teachers;
     }
 
-    filter(dF, dT, t, sC, cR) {
-        let displayedItem = DATA;
+    filter(FIREBASEDATA, dF, dT, t, sC, cR) {
+        let displayedItem = FIREBASEDATA;
 
         displayedItem = displayedItem.filter((el) => { // фильтрация по датам
             if (isNaN(dF) && isNaN(dT)) {

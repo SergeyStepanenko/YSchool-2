@@ -1,28 +1,30 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import API from '../../api';
+import API from '../../api/API.js';
 import convert from '../../utils/convert.js'; // конвертирую падеж названия месяца (прим. январь -> января)
-import moment from 'moment';
+import Filter from '../schedule/filter.jsx';
 import properTime from '../../utils/time.js'; // исправляю нюанс вывода времени (прим. 12:0 -> 12:00 (с учетом проверки))
 import Schedule from './schedule.jsx';
-import API_GUI from '../schedule/api_gui.jsx';
-
-API.initialize();
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
 
-const DATA = [];
+rootRef.on('value', (snap) => {
+    const FIREBASEDATA = [];
+    const Obj = snap.val();
+    for (const x in Obj) {
+        if (Object.prototype.hasOwnProperty.call(Obj, x)) {
+            FIREBASEDATA.push(Obj[x]);
+        }
+    }
+
+    API.initialize(FIREBASEDATA);
+});
+
 const LECTURES = API.getLectures();
 const TEACHERS = API.getTeachers();
-let arr = [];
-
-for (const x in LECTURES) {
-    if (Object.prototype.hasOwnProperty.call(LECTURES, x)) {
-        DATA.push(LECTURES[x]);
-    }
-}
+let FIREBASEDATA = [];
 
 export default class ScheduleApp extends React.Component {
     constructor() {
@@ -31,21 +33,21 @@ export default class ScheduleApp extends React.Component {
         this.state = {
             displayedItem: [],
         };
-
         this.filter = this.filter.bind(this);
     }
 
     componentDidMount() {
-        rootRef.on('value', snap => {
-            arr = [];
-            let Obj = snap.val();
+        rootRef.on('value', (snap) => {
+            FIREBASEDATA = [];
+            const Obj = snap.val();
             for (const x in Obj) {
                 if (Object.prototype.hasOwnProperty.call(Obj, x)) {
-                    arr.push(Obj[x]);
+                    FIREBASEDATA.push(Obj[x]);
                 }
             }
+
             this.setState({
-                displayedItem: arr,
+                displayedItem: FIREBASEDATA,
             });
         });
     }
@@ -58,25 +60,18 @@ export default class ScheduleApp extends React.Component {
         const t = document.querySelector('#teacher').value;
         const sC = document.querySelector('#school').value;
         const cR = document.querySelector('#classRoom').value;
-        const displayedItem = API.filter(dF, dT, t, sC, cR);
+        const displayedItem = API.filter(FIREBASEDATA, dF, dT, t, sC, cR);
 
-        // this.setState({
-        //     displayedItem: displayedItem
-        // });
+        this.setState({
+            displayedItem: displayedItem,
+        });
     }
-
-    // setLecture() {
-        // let displayedItem = API.setLecture();
-
-        // this.setState({
-        //     displayedItem: displayedItem
-        // });
-    // }
 
     render() {
         return (
           <div>
             <Link to="api">API</Link>
+            <button onClick={API.getLectures}/>
             <div className="schedule-container">
               <div className="schedule-container__line schedule-container__line schedule-container__line schedule-container__line-header">
                 <div className="schedule-container__line__block_1 schedule-container__line__block_1-header">
@@ -86,8 +81,15 @@ export default class ScheduleApp extends React.Component {
                 <div className="schedule-container__line__block_2 schedule-container__line__block_2-header">
                   <select id="teacher" className="input" onChange={this.filter}>
                     <option>Все</option>
-                    <option>Антон Тен</option>
-                    <option>Эдуард Мацуков</option>
+                    {
+                      FIREBASEDATA.map((el, index) => {
+                          return (
+                            <Filter
+                              key={index}
+                              value={el.teacher.name}
+                              />);
+                      })
+                    }
                   </select>
                 </div>
                 <div className="schedule-container__line__block_3 schedule-container__line__block_3-header">

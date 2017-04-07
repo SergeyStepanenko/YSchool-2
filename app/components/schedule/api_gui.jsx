@@ -1,11 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router';
 
-import API from '../../api';
+import API from '../../api/API.js';
 import ScheduleApp from '../schedule/index.jsx';
 
-export default class API_GUI extends React.Component {
-    render() {
+export default function API_GUI() {
         return (
           <div>
             <Link to="/">Back</Link>
@@ -25,5 +24,4 @@ export default class API_GUI extends React.Component {
             </section>
           </div>
         );
-    }
 }

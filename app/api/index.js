@@ -19,7 +19,7 @@ class API {
         this.teachers = {};
         this.classRooms = {};
 
-        const lecturesArray = Object.keys(LECTURES); // массив ключей объекта LECTURES
+        const lecturesArray = Object.keys(LECTURES);
         lecturesArray.map((id) => {
             const teacherId = [LECTURES[id].teacher.id];
 
@@ -110,7 +110,8 @@ class API {
         const amountOfStudents = document.querySelector('#amountOfStudents').value;
         const loc = document.querySelector('#location').value;
 
-        const seconds = (startT[0] * 3600 + startT[1] * 60) * 1000;
+        const secondsStart = (startT[0] * 3600 + startT[1] * 60) * 1000;
+        const secondsEnd = (endT[0] * 3600 + endT[1] * 60) * 1000;
         const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
 
             firebase.database().ref('lectures/' + newPostKey).set({
@@ -121,8 +122,8 @@ class API {
                     name: classRoom,
                 },
                 company: comp,
-                date: date + seconds,
-                endTime: endT,
+                date: date + secondsStart,
+                endTime: date + secondsEnd,
                 isDeleted: false,
                 lecture: lect,
                 location: loc,

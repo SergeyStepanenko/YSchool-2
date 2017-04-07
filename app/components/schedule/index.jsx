@@ -1,13 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router';
-import createFragment from 'react-addons-create-fragment';
 
 import API from '../../api';
 import convert from '../../utils/convert.js'; // конвертирую падеж названия месяца (прим. январь -> января)
 import moment from 'moment';
 import properTime from '../../utils/time.js'; // исправляю нюанс вывода времени (прим. 12:0 -> 12:00 (с учетом проверки))
 import Schedule from './schedule.jsx';
-import Test from './test.jsx';
 import API_GUI from '../schedule/api_gui.jsx';
 
 API.initialize();
@@ -25,18 +23,6 @@ for (const x in LECTURES) {
         DATA.push(LECTURES[x]);
     }
 }
-// let firebaseArray = [];
-// database.ref('/lectures/').once('value').then((snapshot) => {
-//     const firebaseObject = snapshot.val();
-//
-//     for (const x in firebaseObject) {
-//         if (Object.prototype.hasOwnProperty.call(firebaseObject, x)) {
-//             firebaseArray.push(firebaseObject[x]);
-//         }
-//     }
-//
-//     console.log(firebaseArray);
-// });
 
 export default class ScheduleApp extends React.Component {
     constructor() {
@@ -47,11 +33,11 @@ export default class ScheduleApp extends React.Component {
         };
 
         this.filter = this.filter.bind(this);
-        this.setLecture = this.setLecture.bind(this);
     }
 
     componentDidMount() {
         rootRef.on('value', snap => {
+            arr = [];
             let Obj = snap.val();
             for (const x in Obj) {
                 if (Object.prototype.hasOwnProperty.call(Obj, x)) {
@@ -59,13 +45,10 @@ export default class ScheduleApp extends React.Component {
                 }
             }
             this.setState({
-                displayedItem: arr
+                displayedItem: arr,
             });
         });
     }
-
-
-
 
     filter() {
         const dateFrom = document.querySelector('#dateFrom').value.replace('-', ', ');
@@ -77,23 +60,22 @@ export default class ScheduleApp extends React.Component {
         const cR = document.querySelector('#classRoom').value;
         const displayedItem = API.filter(dF, dT, t, sC, cR);
 
-        this.setState({
-            displayedItem: displayedItem
-        });
+        // this.setState({
+        //     displayedItem: displayedItem
+        // });
     }
 
-    setLecture() {
-        let displayedItem = API.setLecture();
+    // setLecture() {
+        // let displayedItem = API.setLecture();
 
-        this.setState({
-            displayedItem: displayedItem
-        });
-    }
+        // this.setState({
+        //     displayedItem: displayedItem
+        // });
+    // }
 
     render() {
         return (
           <div>
-            {this.state.test}<br/>
             <Link to="api">API</Link>
             <div className="schedule-container">
               <div className="schedule-container__line schedule-container__line schedule-container__line schedule-container__line-header">
@@ -126,10 +108,10 @@ export default class ScheduleApp extends React.Component {
               </div>
 
               {
-    this.state.displayedItem.map((el) => {
+    this.state.displayedItem.map((el, index) => {
         return (
           <Schedule
-            key={el.id}
+            key={index}
             date={new Date(Number(el.date)).getDate()}
             month={convert(Number(el.date))}
             lecture={el.lecture}

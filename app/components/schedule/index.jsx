@@ -22,9 +22,9 @@ rootRef.on('value', (snap) => {
     API.initialize(FIREBASEDATA);
 });
 
+let FIREBASEDATA = [];
 const LECTURES = API.getLectures();
 const TEACHERS = API.getTeachers();
-let FIREBASEDATA = [];
 
 export default class ScheduleApp extends React.Component {
     constructor() {
@@ -71,7 +71,6 @@ export default class ScheduleApp extends React.Component {
         return (
           <div>
             <Link to="api">API</Link>
-            <button onClick={API.getLectures}/>
             <div className="schedule-container">
               <div className="schedule-container__line schedule-container__line schedule-container__line schedule-container__line-header">
                 <div className="schedule-container__line__block_1 schedule-container__line__block_1-header">

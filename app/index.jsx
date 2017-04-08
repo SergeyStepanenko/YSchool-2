@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, hashHistory, browserHistory } from 'react-router';
 
-import API_GUI from '../app/components/schedule/api_gui.jsx';
 import API from './api/API.js';
+import API_GUI from '../app/components/schedule/api_gui.jsx';
 import ScheduleApp from './components/schedule/index.jsx';
 
 // API.initialize();

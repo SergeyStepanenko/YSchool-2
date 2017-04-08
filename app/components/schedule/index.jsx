@@ -10,21 +10,9 @@ import Schedule from './schedule.jsx';
 const database = firebase.database();
 const rootRef = database.ref('lectures');
 
-rootRef.on('value', (snap) => {
-    const FIREBASEDATA = [];
-    const Obj = snap.val();
-    for (const x in Obj) {
-        if (Object.prototype.hasOwnProperty.call(Obj, x)) {
-            FIREBASEDATA.push(Obj[x]);
-        }
-    }
-
-    API.initialize(FIREBASEDATA);
-});
-
 let FIREBASEDATA = [];
-const LECTURES = API.getLectures();
-const TEACHERS = API.getTeachers();
+// const LECTURES = API.getLectures();
+// const TEACHERS = API.getTeachers();
 
 export default class ScheduleApp extends React.Component {
     constructor() {
@@ -34,11 +22,11 @@ export default class ScheduleApp extends React.Component {
             displayedItem: [],
         };
         this.filter = this.filter.bind(this);
+        this.getLectures = this.getLectures.bind(this);
     }
 
     componentDidMount() {
         rootRef.on('value', (snap) => {
-            FIREBASEDATA = [];
             const Obj = snap.val();
             for (const x in Obj) {
                 if (Object.prototype.hasOwnProperty.call(Obj, x)) {
@@ -46,10 +34,16 @@ export default class ScheduleApp extends React.Component {
                 }
             }
 
+            API.initialize(Obj);
+
             this.setState({
                 displayedItem: FIREBASEDATA,
             });
         });
+    }
+
+    getLectures() {
+        const LECTURES = API.getLectures();
     }
 
     filter() {
@@ -71,41 +65,35 @@ export default class ScheduleApp extends React.Component {
         return (
           <div>
             <Link to="api">API</Link>
+            <button onClick={this.getLectures}/>
             <div className="schedule-container">
-              <div className="schedule-container__line schedule-container__line schedule-container__line schedule-container__line-header">
-                <div className="schedule-container__line__block_1 schedule-container__line__block_1-header">
-                  <input id="dateFrom" className="input" type="date" onChange={this.filter}/>
-                  <input id="dateTo" className="input" type="date" onChange={this.filter}/>
-                </div>
-                <div className="schedule-container__line__block_2 schedule-container__line__block_2-header">
-                  <select id="teacher" className="input" onChange={this.filter}>
-                    <option>Все</option>
-                    {
-                      FIREBASEDATA.map((el, index) => {
-                          return (
-                            <Filter
-                              key={index}
-                              value={el.teacher.name}
-                              />);
-                      })
-                    }
-                  </select>
-                </div>
-                <div className="schedule-container__line__block_3 schedule-container__line__block_3-header">
-                  <select id="school" className="input" onChange={this.filter}>
-                    <option>Все</option>
-                    <option>Школа Мобильного Дизайна</option>
-                    <option>Школа Мобильной Разработки</option>
-                    <option>Школа Разработки Интерфейсов</option>
-                  </select>
-                </div>
-                <div className="schedule-container__line__block_4 schedule-container__line__block_4-header">
-                  <select id="classRoom" className="input" onChange={this.filter}>
-                    <option>Все</option>
-                    <option>Зеленый кит</option>
-                    <option>Красный кит</option>
-                  </select>
-                </div>
+              <div className="schedule-container__filters">
+                <input id="dateFrom" className="input" type="date" onChange={this.filter}/>
+                <input id="dateTo" className="input" type="date" onChange={this.filter}/>
+                <select id="teacher" className="input" onChange={this.filter}>
+                  <option>Все</option>
+                  {
+                    FIREBASEDATA.map((el, index) => {
+                        return (
+                          <Filter
+                            key={index}
+                            value={el.teacher.name}
+                            />);
+                    })
+                  }
+                </select>
+                {/* <label className="label">Выберите школу</label> */}
+                <select id="school" className="input" onChange={this.filter}>
+                  <option className="option">Все</option>
+                  <option className="option">Школа Мобильного Дизайна</option>
+                  <option className="option">Школа Мобильной Разработки</option>
+                  <option className="option">Школа Разработки Интерфейсов</option>
+                </select>
+                <select id="classRoom" className="input" onChange={this.filter}>
+                  <option>Все</option>
+                  <option>Зеленый кит</option>
+                  <option>Красный кит</option>
+                </select>
               </div>
 
               {

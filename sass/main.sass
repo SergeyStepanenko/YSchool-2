@@ -6,22 +6,30 @@ body
 	font-size: 14px
 	font-family: $default-font
 	overflow-x: hidden
-	background-color: #FEFEFE
+	background: #feb645 /* Old browsers */
+	background: -moz-linear-gradient(top,  #feb645 29%, #fa993b 65%, #fa993b 65%, #fa993b 74%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #feb645 29%,#fa993b 65%,#fa993b 65%,#fa993b 74%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #feb645 29%,#fa993b 65%,#fa993b 65%,#fa993b 74%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feb645', endColorstr='#fa993b',GradientType=0 ); /* IE6-9 */
+	background-repeat: repeat
+	background-size: 100% 1000px
 
 .header,
 .schedule-container
 	max-width: 960px
 	margin: 0 auto
 	div
-		// font-size: 10px
 		margin: 3px
-		// box-shadow: 1px 1px 2px #555246
+
+.schedule-container__filters
+	display: flex
+	justify-content: center
 
 .schedule-container__line
 	display: flex
 	background-color: $default-color
 	background-image: url(bkg.jpg)
-	background-size: 400px
+	background-size: 300px
 	border-radius: 15px
 	&-header
 		font-size: 24px
@@ -68,23 +76,31 @@ body
 	justify-content: center
 	flex-flow: column
 	width: 110px
-	color: #e28315
+	color: #000
 	font-size: 12px
 	&__school
 		line-height: 22px
 	&-header
 		font-size: 24px
+	background-color: #fefefe
+	margin: 0 !important
+	padding-left: 20px
 
 .schedule-container__line__block_4
 	min-width: 150px
 	display: flex
 	justify-content: center
 	flex-flow: column
-	color: #e28315
+	color: #000
 	font-size: 13px
 	padding-right: 7px
 	&-header
 		font-size: 24px
+	background-color: #fefefe
+	margin: 0 !important
+	border-top-right-radius: 15px
+	border-bottom-right-radius: 15px
+
 
 .schedule-header
 	display: flex
@@ -102,7 +118,11 @@ body
 .input
 	color: white
 	background-color: $default-color
-	border: 1px solid white
+	border: 1px solid #000
+	border-radius: 15px
+	padding: 5px 10px
+	margin: 5px
+	width: 150px
 
 .api
     border: 2px solid black
@@ -114,5 +134,15 @@ body
 input
     width: 98%
     margin: 5px 0
+
+.option
+	border-radius: 15px
+
+
+
+
+
+
+
 
 @import "media" // Всегда в конце

@@ -2,45 +2,58 @@ import LECTURES from '../../js/lectures';
 // import ScheduleApp from '../components/schedule/index.jsx'
 
 const database = firebase.database();
-const lectures = database.ref('lectures');
-const teachers = database.ref('teachers');
-const school = database.ref('school');
+const rootRef = database.ref('lectures');
 
 class API {
-    initialize(FIREBASEDATA) {
-        this.lectures = FIREBASEDATA;
-        this.teachers = {};
-        this.classRooms = {};
+    initialize(Obj) {
+        // rootRef.on('value', (snap) => {
+        //     const FIREBASEDATA = [];
+        //     const Obj = snap.val();
+        //     for (const x in Obj) {
+        //         if (Object.prototype.hasOwnProperty.call(Obj, x)) {
+        //             FIREBASEDATA.push(Obj[x]);
+        //         }
+        //     }
+            this.lectures = Obj;
+            this.teachers = {};
+            this.classRooms = {};
 
-        const lecturesArray = Object.keys(LECTURES);
-        lecturesArray.map((id) => {
-            const teacherId = [LECTURES[id].teacher.id];
+            const lecturesArray = Object.keys(Obj);
+            lecturesArray.map((id) => {
+                const teacherId = [Obj[id].teacher.id];
 
-            this.teachers[teacherId] = {
-                name: LECTURES[id].teacher.name,
-                lectures: [
-                    ...(this.teachers[teacherId] && this.teachers[teacherId].lectures || []),
-                    id
-                ],
-            };
+                this.teachers[teacherId] = {
+                    name: Obj[id].teacher.name,
+                    lectures: [
+                        ...(this.teachers[teacherId] && this.teachers[teacherId].lectures || []),
+                        id
+                    ],
+                };
 
-            const classRoomId = [LECTURES[id].classRoom.id];
-            const classRoom = LECTURES[id].classRoom;
+                const classRoomId = [Obj[id].classRoom.id];
+                const classRoom = Obj[id].classRoom;
 
-            this.classRooms[classRoomId] = {
-                name: classRoom.name,
-                maxStudents: classRoom.maxStudents,
-                lectures: [
-                    ...(this.classRooms[classRoomId] && this.classRooms[classRoomId].lectures || []),
-                    id
-                ],
-            };
+                this.classRooms[classRoomId] = {
+                    name: classRoom.name,
+                    maxStudents: classRoom.maxStudents,
+                    lectures: [
+                        ...(this.classRooms[classRoomId] && this.classRooms[classRoomId].lectures || []),
+                        id
+                    ],
+                };
 
-            return id;
-        });
+                return id;
+            });
+
+
+        console.log(this.lectures);
+        console.log(this.teachers);
+        console.log(this.classRooms);
+        // });
     }
 
     getLectures() {
+        console.log(this.lectures);
         return this.lectures;
     }
 

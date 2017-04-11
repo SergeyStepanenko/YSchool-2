@@ -1,5 +1,8 @@
+import addLecture from '../utils/addLectureValidation.js'
+
 const database = firebase.database();
 const rootRef = database.ref('lectures');
+
 let LECTURES, TEACHERS, CLASSROOMS, SCHOOLS;
 
 class API {
@@ -49,7 +52,7 @@ class API {
 
             return id;
         });
-        console.log('API`s ready');
+        console.info('API`s ready');
     }
 
     getLectures() {
@@ -102,55 +105,94 @@ class API {
         return displayedItem;
     }
 
+    test() {
+        console.log('hi');
+    }
+
     setLecture() {
         const time = Date.now();
         const lect = document.querySelector('#lecture').value;
         const teacher = document.querySelector('#teacher').value;
         const comp = document.querySelector('#company').value;
         const sch = document.querySelector('#school').value;
-        const startT = document.querySelector('#startTime').value.split(':');
-        const endT = document.querySelector('#endTime').value.split(':');
+        const inputStartTime = document.querySelector('#startTime').value;
+        const startT = inputStartTime.split(':');
+        const inputEndTime = document.querySelector('#endTime').value;
+        const endT = inputEndTime.split(':');
         const classRoom = document.querySelector('#classRoom').value;
         const amountOfStudents = document.querySelector('#amountOfStudents').value;
-        const loc = document.querySelector('#location').value;
-        const inputDate = document.querySelector('#date').value.split('-');
-        const secFrom = new Date(inputDate[0], inputDate[1] - 1, inputDate[2], startT[0], startT[1]).getTime();
-        const secTo = new Date(inputDate[0], inputDate[1] - 1, inputDate[2], endT[0], endT[1]).getTime();
+        const location = document.querySelector('#location').value;
+        const inputDate = document.querySelector('#date').value;
+        const date = inputDate.split('-');
+        const secFrom = new Date(date[0], date[1] - 1, date[2], startT[0], startT[1]).getTime();
+        const secTo = new Date(date[0], date[1] - 1, date[2], endT[0], endT[1]).getTime();
 
-        if (!isNaN(inputDate) // проверка: заполнены ли все поля
-        && lect !== ''
-        && teacher !== ''
-        && comp !== ''
-        && sch !== ''
-        && startT !== ''
-        && endT !== ''
-        && classRoom !== ''
-        && amountOfStudents !== ''
-        && loc !== '') {
-            // console.log('Лекция добавлена');
-        } else {
-            // console.log('Все поля должны быть заполнены');
+        if (inputDate === ''
+        || lect === ''
+        || teacher === ''
+        || comp === ''
+        || sch === ''
+        || inputStartTime === ''
+        || inputEndTime === ''
+        || classRoom === ''
+        || amountOfStudents === ''
+        || location === '') {
+            console.log('Все поля должны быть заполнены');
+
+            return false;
         }
 
+        if (secFrom > secTo) {
+            console.log('начало лекции не может быть позже ее конца');
+
+            return false;
+        }
+
+        function checkIntersection(newStart, newEnd, existStart, existEnd, key) {
+            if (newStart <= existStart && newEnd <= existStart ||
+                newStart >= existEnd && newEnd >= existEnd) { // проверяем чтобы не было пересечений с другими лекциями
+                return true;
+            }
+        }
+        let teacherId = false;
         Object.keys(TEACHERS).map((key) => {
-            if (teacher === TEACHERS[key].name) {
+            if (teacher === TEACHERS[key].name) { // сверяем есть ли в базе такой учитель
                 const lectureId = TEACHERS[key].lectures;
-                for (var i = 0; i < lectureId.length; i++) {
-                    if (secFrom <= LECTURES[lectureId[i]].date) {
-                        if (secTo >= LECTURES[lectureId[i]].date) {
-                            console.log('intersection');
-                        }
+                for (let i = 0; i < lectureId.length; i++) {
+                    if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
+                        teacherId = key; // присваиваем ключ учителя
+                        console.log('ID найденого в базе учителя ' + teacherId);
                     } else {
-                        console.log('else');
+                        console.warn('этот преподаватель ведет лекцию в это время');
                     }
                 }
-            } else {
-                // console.log(false);
             }
-            // Object.keys(LECTURES).map((key) => {
-            //     console.log('inner');
-            // });
         });
+
+        if (!teacherId) { // если нет введенного учителя в базе учителей, то присваиваем ему новый id
+            teacherId = firebase.database().ref().child('posts').push().key;
+            console.log('id для нового учителя ' + teacherId);
+        }
+
+        let schoolId = false;
+        Object.keys(SCHOOLS).map((key) => {
+            if (sch === SCHOOLS[key].name) { // сверяем есть ли в базе такая школа
+                const lectureId = SCHOOLS[key].lectures;
+                for (let i = 0; i < lectureId.length; i++) {
+                    if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
+                        schoolId = key; // присваиваем ключ школы
+                        console.log('ID найденной в базе школы ' + schoolId);
+                    } else {
+                        console.warn('у этой школы в это время уже есть лекция');
+                    }
+                }
+            }
+        });
+
+        if (!schoolId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
+            schoolId = firebase.database().ref().child('posts').push().key;
+            console.log('id для новой школы ' + schoolId);
+        }
 
         // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
         //
@@ -176,6 +218,9 @@ class API {
         //             name: teacher,
         //         },
         //     });
+
+        schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
+        teacherId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
     }
 }
 

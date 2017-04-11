@@ -1,59 +1,58 @@
-import LECTURES from '../../js/lectures';
-// import ScheduleApp from '../components/schedule/index.jsx'
-
 const database = firebase.database();
 const rootRef = database.ref('lectures');
+let LECTURES, TEACHERS, CLASSROOMS, SCHOOLS;
 
 class API {
     initialize(Obj) {
-        // rootRef.on('value', (snap) => {
-        //     const FIREBASEDATA = [];
-        //     const Obj = snap.val();
-        //     for (const x in Obj) {
-        //         if (Object.prototype.hasOwnProperty.call(Obj, x)) {
-        //             FIREBASEDATA.push(Obj[x]);
-        //         }
-        //     }
-            this.lectures = Obj;
-            this.teachers = {};
-            this.classRooms = {};
+        this.lectures = Obj;
+        this.teachers = {};
+        this.classRooms = {};
+        this.schools = {};
+        const lecturesArray = Object.keys(Obj);
+        lecturesArray.map((id) => {
+            const teacherId = [Obj[id].teacher.id];
 
-            const lecturesArray = Object.keys(Obj);
-            lecturesArray.map((id) => {
-                const teacherId = [Obj[id].teacher.id];
+            this.teachers[teacherId] = {
+                name: Obj[id].teacher.name,
+                lectures: [
+                    ...(this.teachers[teacherId] && this.teachers[teacherId].lectures || []),
+                    id
+                ],
+            };
 
-                this.teachers[teacherId] = {
-                    name: Obj[id].teacher.name,
-                    lectures: [
-                        ...(this.teachers[teacherId] && this.teachers[teacherId].lectures || []),
-                        id
-                    ],
-                };
+            const classRoomId = [Obj[id].classRoom.id];
+            const classRoom = Obj[id].classRoom;
 
-                const classRoomId = [Obj[id].classRoom.id];
-                const classRoom = Obj[id].classRoom;
+            this.classRooms[classRoomId] = {
+                name: classRoom.name,
+                maxStudents: classRoom.maxStudents,
+                lectures: [
+                    ...(this.classRooms[classRoomId] && this.classRooms[classRoomId].lectures || []),
+                    id
+                ],
+            };
 
-                this.classRooms[classRoomId] = {
-                    name: classRoom.name,
-                    maxStudents: classRoom.maxStudents,
-                    lectures: [
-                        ...(this.classRooms[classRoomId] && this.classRooms[classRoomId].lectures || []),
-                        id
-                    ],
-                };
+            const schoolId = [Obj[id].school.id];
+            const school = [Obj[id].school];
 
-                return id;
-            });
+            this.schools[schoolId] = {
+                name: Obj[id].school.name,
+                lectures: [
+                    ...(this.schools[schoolId] && this.schools[schoolId].lectures || []),
+                    id
+                ],
+            };
+            LECTURES = this.lectures;
+            TEACHERS = this.teachers;
+            CLASSROOMS = this.classRooms;
+            SCHOOLS = this.schools;
 
-
-        console.log(this.lectures);
-        console.log(this.teachers);
-        console.log(this.classRooms);
-        // });
+            return id;
+        });
+        console.log('API`s ready');
     }
 
     getLectures() {
-        console.log(this.lectures);
         return this.lectures;
     }
 
@@ -105,7 +104,6 @@ class API {
 
     setLecture() {
         const time = Date.now();
-        const date = new Date(document.querySelector('#date').value.replace('-', ', ')).getTime();
         const lect = document.querySelector('#lecture').value;
         const teacher = document.querySelector('#teacher').value;
         const comp = document.querySelector('#company').value;
@@ -115,33 +113,69 @@ class API {
         const classRoom = document.querySelector('#classRoom').value;
         const amountOfStudents = document.querySelector('#amountOfStudents').value;
         const loc = document.querySelector('#location').value;
+        const inputDate = document.querySelector('#date').value.split('-');
+        const secFrom = new Date(inputDate[0], inputDate[1] - 1, inputDate[2], startT[0], startT[1]).getTime();
+        const secTo = new Date(inputDate[0], inputDate[1] - 1, inputDate[2], endT[0], endT[1]).getTime();
 
-        const secondsStart = (startT[0] * 3600 + startT[1] * 60) * 1000;
-        const secondsEnd = (endT[0] * 3600 + endT[1] * 60) * 1000;
-        const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
+        if (!isNaN(inputDate) // проверка: заполнены ли все поля
+        && lect !== ''
+        && teacher !== ''
+        && comp !== ''
+        && sch !== ''
+        && startT !== ''
+        && endT !== ''
+        && classRoom !== ''
+        && amountOfStudents !== ''
+        && loc !== '') {
+            // console.log('Лекция добавлена');
+        } else {
+            // console.log('Все поля должны быть заполнены');
+        }
 
-            firebase.database().ref('lectures/' + newPostKey).set({
-                id: newPostKey,
-                classRoom: {
-                    id: time,
-                    maxStudents: amountOfStudents,
-                    name: classRoom,
-                },
-                company: comp,
-                date: date + secondsStart,
-                endTime: date + secondsEnd,
-                isDeleted: false,
-                lecture: lect,
-                location: loc,
-                school: {
-                    id: time + '1',
-                    name: sch,
-                },
-                teacher: {
-                    id: time + '2',
-                    name: teacher,
-                },
-            });
+        Object.keys(TEACHERS).map((key) => {
+            if (teacher === TEACHERS[key].name) {
+                const lectureId = TEACHERS[key].lectures;
+                for (var i = 0; i < lectureId.length; i++) {
+                    if (secFrom <= LECTURES[lectureId[i]].date) {
+                        if (secTo >= LECTURES[lectureId[i]].date) {
+                            console.log('intersection');
+                        }
+                    } else {
+                        console.log('else');
+                    }
+                }
+            } else {
+                // console.log(false);
+            }
+            // Object.keys(LECTURES).map((key) => {
+            //     console.log('inner');
+            // });
+        });
+
+        // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
+        //
+        //     firebase.database().ref('lectures/' + newPostKey).set({
+        //         id: newPostKey,
+        //         classRoom: {
+        //             id: time,
+        //             maxStudents: amountOfStudents,
+        //             name: classRoom,
+        //         },
+        //         company: comp,
+        //         date: date,
+        //         endTime: date,
+        //         isDeleted: false,
+        //         lecture: lect,
+        //         location: loc,
+        //         school: {
+        //             id: time + '1',
+        //             name: sch,
+        //         },
+        //         teacher: {
+        //             id: time + '2',
+        //             name: teacher,
+        //         },
+        //     });
     }
 }
 

@@ -20,7 +20,7 @@ export default function API_GUI() {
               <input id="classRoom" type="text" placeholder="Аудитория"/><br/>
               <input id="amountOfStudents" type="value" placeholder="Кол-во студентов"/><br/>
               <input id="location" type="text" placeholder="Город"/><br/>
-              <button onClick={API.setLecture}>Submit</button>
+              <button id="submit" onClick={API.setLecture}>Submit</button>
             </section>
           </div>
         );

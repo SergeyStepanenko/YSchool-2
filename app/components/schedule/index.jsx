@@ -10,9 +10,13 @@ import Schedule from './schedule.jsx';
 const database = firebase.database();
 const rootRef = database.ref('lectures');
 
-let FIREBASEDATA = [];
-// const LECTURES = API.getLectures();
-// const TEACHERS = API.getTeachers();
+let FIREBASEDATA = [],
+    TEACHERS = [],
+    SCHOOLS = [];
+    // CLASSROOMS = [];
+let classRooms = [];
+let teachers = [];
+let schools = [];
 
 export default class ScheduleApp extends React.Component {
     constructor() {
@@ -27,6 +31,7 @@ export default class ScheduleApp extends React.Component {
 
     componentDidMount() {
         rootRef.on('value', (snap) => {
+            FIREBASEDATA = [];
             const Obj = snap.val();
             for (const x in Obj) {
                 if (Object.prototype.hasOwnProperty.call(Obj, x)) {
@@ -34,7 +39,9 @@ export default class ScheduleApp extends React.Component {
                 }
             }
 
-            API.initialize(Obj);
+            classRooms = API.classRooms;
+            teachers = API.teachers;
+            schools = API.schools;
 
             this.setState({
                 displayedItem: FIREBASEDATA,
@@ -65,7 +72,6 @@ export default class ScheduleApp extends React.Component {
         return (
           <div>
             <Link to="api">API</Link>
-            <button onClick={this.getLectures}/>
             <div className="schedule-container">
               <div className="schedule-container__filters">
                 <input id="dateFrom" className="input" type="date" onChange={this.filter}/>
@@ -73,26 +79,38 @@ export default class ScheduleApp extends React.Component {
                 <select id="teacher" className="input" onChange={this.filter}>
                   <option>Все</option>
                   {
-                    FIREBASEDATA.map((el, index) => {
-                        return (
-                          <Filter
-                            key={index}
-                            value={el.teacher.name}
-                            />);
-                    })
+                      Object.keys(teachers).map((key, index) => {
+                          return (
+                            <Filter
+                              key={index}
+                              value={teachers[key].name}
+                              />);
+                      })
                   }
                 </select>
-                {/* <label className="label">Выберите школу</label> */}
                 <select id="school" className="input" onChange={this.filter}>
                   <option className="option">Все</option>
-                  <option className="option">Школа Мобильного Дизайна</option>
-                  <option className="option">Школа Мобильной Разработки</option>
-                  <option className="option">Школа Разработки Интерфейсов</option>
+                  {
+                      Object.keys(schools).map((key, index) => {
+                          return (
+                            <Filter
+                              key={index}
+                              value={schools[key].name}
+                              />);
+                      })
+                  }
                 </select>
                 <select id="classRoom" className="input" onChange={this.filter}>
                   <option>Все</option>
-                  <option>Зеленый кит</option>
-                  <option>Красный кит</option>
+                  {
+                      Object.keys(classRooms).map((key, index) => {
+                          return (
+                            <Filter
+                              key={index}
+                              value={classRooms[key].name}
+                              />);
+                      })
+                  }
                 </select>
               </div>
 

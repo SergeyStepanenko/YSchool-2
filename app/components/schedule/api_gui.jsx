@@ -17,7 +17,7 @@ export default function API_GUI() {
               <input id="school" type="text" defaultValue="Школа Мобильного Дизайна" placeholder="Введите школу"/><br/>
               Начало лекции <input id="startTime" defaultValue="12:00" type="time"/><br/>
               Конец лекции <input id="endTime" defaultValue="13:30" type="time"/><br/>
-              <input id="classRoom" type="text" defaultValue="Аудитория" placeholder="Аудитория"/><br/>
+              <input id="classRoom" type="text" defaultValue="Зеленый кит" placeholder="Аудитория"/><br/>
               <input id="amountOfStudents" type="defaultValue" defaultValue="20" placeholder="Кол-во студентов"/><br/>
               <input id="location" type="text" defaultValue="Москва" placeholder="Город"/><br/>
               <button id="submit" onClick={API.setLecture}>Submit</button>

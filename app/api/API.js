@@ -143,7 +143,7 @@ class API {
         }
 
         if (secFrom > secTo) {
-            console.log('начало лекции не может быть позже ее конца');
+            console.log('Начало лекции не может быть позже ее конца');
 
             return false;
         }
@@ -163,7 +163,7 @@ class API {
                         teacherId = key; // присваиваем ключ учителя
                         console.log('ID найденого в базе учителя ' + teacherId);
                     } else {
-                        console.warn('этот преподаватель ведет лекцию в это время');
+                        console.warn('Этот преподаватель ведет лекцию в это время');
                     }
                 }
             }
@@ -183,7 +183,7 @@ class API {
                         schoolId = key; // присваиваем ключ школы
                         console.log('ID найденной в базе школы ' + schoolId);
                     } else {
-                        console.warn('у этой школы в это время уже есть лекция');
+                        console.warn('У этой школы в это время уже есть лекция');
                     }
                 }
             }
@@ -192,6 +192,30 @@ class API {
         if (!schoolId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
             schoolId = firebase.database().ref().child('posts').push().key;
             console.log('id для новой школы ' + schoolId);
+        }
+
+        let classRoomId = false;
+        Object.keys(CLASSROOMS).map((key) => {
+            if (classRoom === CLASSROOMS[key].name) { // сверяем есть ли в базе такая школа
+                const lectureId = CLASSROOMS[key].lectures;
+                for (let i = 0; i < lectureId.length; i++) {
+                    if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
+                        classRoomId = key; // присваиваем ключ школы
+                        console.log('ID найденной в базе аудитории ' + classRoomId);
+                    } else {
+                        console.warn('В этой аудитории в это время идет лекция');
+                    }
+                }
+            }
+        });
+
+        if (CLASSROOMS[classRoomId].maxStudents < amountOfStudents) {
+            console.warn('Вместимость аудитории classRoom (' + CLASSROOMS[classRoomId].maxStudents + ' человек). Вы указали ' + amountOfStudents);
+        }
+
+        if (!classRoomId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
+            classRoomId = firebase.database().ref().child('posts').push().key;
+            console.log('id для новой аудитории ' + classRoomId);
         }
 
         // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
@@ -220,7 +244,8 @@ class API {
         //     });
 
         schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
-        teacherId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
+        teacherId = false;
+        classRoomId = false;
     }
 }
 

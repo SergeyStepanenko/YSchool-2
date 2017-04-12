@@ -1,8 +1,8 @@
 {
-  "name": "learn-react",
+  "name": "Yandex assignment #2",
   "version": "1.0.0",
   "description": "",
-  "author": "Brad Westfall",
+  "author": "Sergey Stepanenko",
   "license": "ISC",
   "devDependencies": {
     "axios": "^0.9.1",

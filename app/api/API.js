@@ -1,5 +1,5 @@
-import API_GUI from '../components/schedule/api_gui.jsx'
-import {checkInputFields, checkIntersection, checkIfStartTimeIsEarlierThanEndTime} from '../utils/addLectureValidation.js'
+// import API_GUI from '../components/schedule/api_gui.jsx';
+import {checkInputFields, checkIntersection, checkIfStartTimeIsEarlierThanEndTime, matchTeacher} from '../utils/addLectureValidation.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -124,7 +124,9 @@ class API {
         const inputDate = document.querySelector('#date').value;
         const errArr = [];
 
-        this.fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr);
+        if (this.fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr)) {
+            console.log('send data to firebase');
+        }
 
         return errArr;
     }
@@ -139,32 +141,20 @@ class API {
 
         if (!checkInputFields(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc)) {
             errArr.push('Все поля должны быть заполнены');
+
+            return false;
         }
 
         if (!checkIfStartTimeIsEarlierThanEndTime(secFrom, secTo, errArr)) {
             errArr.push('Начало лекции не может быть позже ее конца');
+
+            return false;
         }
 
-        let teacherId = false;
-        Object.keys(TEACHERS).map((key) => {
-            if (teacher === TEACHERS[key].name) { // сверяем есть ли в базе такой учитель
-                const lectureId = TEACHERS[key].lectures;
-                for (let i = 0; i < lectureId.length; i++) {
-                    if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
-                        teacherId = key; // присваиваем ключ учителя
-                        console.info('ID найденого в базе учителя ' + teacherId);
-                    } else {
-                        errArr.push('Этот преподаватель ведет лекцию в это время');
-                    }
-                }
-            }
+        if (!matchTeacher(TEACHERS, LECTURES, teacher, errArr, secFrom, secTo)) {
+            errArr.push('Этот преподаватель ведет лекцию в это время');
 
-            return errArr;
-        });
-
-        if (!teacherId) { // если нет введенного учителя в базе учителей, то присваиваем ему новый id
-            teacherId = firebase.database().ref().child('posts').push().key;
-            console.info('id для нового учителя ' + teacherId);
+            return false;
         }
 
         let schoolId = false;
@@ -193,7 +183,7 @@ class API {
             if (classRoomCapacity < students) {
                 errArr.push('Вместимость аудитории ' + CLASSROOMS[key].name + ' (' + classRoomCapacity + ' человек). Вы указали ' + students);
 
-                return errArr;
+                // return false;
             }
         }
 
@@ -209,6 +199,8 @@ class API {
                         checkIfStudentsFitInClassRoom(CLASSROOMS[classRoomId].maxStudents, amountOfStudents, key);
                     } else {
                         errArr.push('В этой аудитории в это время идет лекция');
+
+                        // return false;
                     }
                 }
             }
@@ -230,7 +222,6 @@ class API {
             console.log('id для новой аудитории ' + classRoomId);
         }
 
-        console.log(errArr);
         // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
         //     firebase.database().ref('lectures/' + newPostKey).set({
         //         id: newPostKey,
@@ -256,11 +247,11 @@ class API {
         //     });
 
         schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
-        teacherId = false;
+        // teacherId = false;
         classRoomId = false;
+        errArr.push('Все проверки пройдены');
 
-        return errArr;
-
+        return true;
     }
 }
 

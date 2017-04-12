@@ -39,3 +39,35 @@ export function checkIntersection(newStart, newEnd, existStart, existEnd) {
 
     return false;
 }
+
+function generateIdForTheNewTeacher(teacherId) {
+    if (!teacherId) { // если нет введенного учителя в базе учителей, то присваиваем ему новый id
+        teacherId = firebase.database().ref().child('posts').push().key;
+        console.info('id для нового учителя ' + teacherId);
+    }
+}
+
+export function matchTeacher(TEACHERS, LECTURES, teacher, errArr, secFrom, secTo) {
+    let teacherId = false;
+    let x = true;
+    Object.keys(TEACHERS).map((key) => {
+        if (teacher === TEACHERS[key].name) { // сверяем есть ли в базе такой учитель
+            const lectureId = TEACHERS[key].lectures;
+            for (let i = 0; i < lectureId.length; i++) {
+                if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
+                    teacherId = key; // присваиваем ключ учителя
+                    console.info('ID найденого в базе учителя ' + teacherId);
+
+                    x = false;
+                }
+            }
+        }
+    });
+    generateIdForTheNewTeacher(teacherId);
+
+    return x;
+}
+
+export function matchSchool(SCHOOLS, LECTURES, sch, errArr, secFrom, secTo) {
+    
+}

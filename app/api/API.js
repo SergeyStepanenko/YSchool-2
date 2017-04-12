@@ -1,4 +1,5 @@
-import addLecture from '../utils/addLectureValidation.js'
+import API_GUI from '../components/schedule/api_gui.jsx'
+import {checkInputFields, checkIntersection, checkIfStartTimeIsEarlierThanEndTime} from '../utils/addLectureValidation.js'
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -11,6 +12,7 @@ class API {
         this.teachers = {};
         this.classRooms = {};
         this.schools = {};
+        this.error = ['err'];
         const lecturesArray = Object.keys(Obj);
         lecturesArray.map((id) => {
             const teacherId = [Obj[id].teacher.id];
@@ -110,50 +112,39 @@ class API {
     }
 
     setLecture() {
-        const time = Date.now();
         const lect = document.querySelector('#lecture').value;
         const teacher = document.querySelector('#teacher').value;
         const comp = document.querySelector('#company').value;
         const sch = document.querySelector('#school').value;
         const inputStartTime = document.querySelector('#startTime').value;
-        const startT = inputStartTime.split(':');
         const inputEndTime = document.querySelector('#endTime').value;
-        const endT = inputEndTime.split(':');
         const classRoom = document.querySelector('#classRoom').value;
         const amountOfStudents = document.querySelector('#amountOfStudents').value;
-        const location = document.querySelector('#location').value;
+        const loc = document.querySelector('#location').value;
         const inputDate = document.querySelector('#date').value;
+        const errArr = [];
+
+        this.fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr);
+
+        return errArr;
+    }
+
+    fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr) {
+        const startT = inputStartTime.split(':');
+        const endT = inputEndTime.split(':');
         const date = inputDate.split('-');
         const secFrom = new Date(date[0], date[1] - 1, date[2], startT[0], startT[1]).getTime();
         const secTo = new Date(date[0], date[1] - 1, date[2], endT[0], endT[1]).getTime();
+        let classRoomCapacity = null;
 
-        if (inputDate === ''
-        || lect === ''
-        || teacher === ''
-        || comp === ''
-        || sch === ''
-        || inputStartTime === ''
-        || inputEndTime === ''
-        || classRoom === ''
-        || amountOfStudents === ''
-        || location === '') {
-            console.log('Все поля должны быть заполнены');
-
-            return false;
+        if (!checkInputFields(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc)) {
+            errArr.push('Все поля должны быть заполнены');
         }
 
-        if (secFrom > secTo) {
-            console.log('Начало лекции не может быть позже ее конца');
-
-            return false;
+        if (!checkIfStartTimeIsEarlierThanEndTime(secFrom, secTo, errArr)) {
+            errArr.push('Начало лекции не может быть позже ее конца');
         }
 
-        function checkIntersection(newStart, newEnd, existStart, existEnd, key) {
-            if (newStart <= existStart && newEnd <= existStart ||
-                newStart >= existEnd && newEnd >= existEnd) { // проверяем чтобы не было пересечений с другими лекциями
-                return true;
-            }
-        }
         let teacherId = false;
         Object.keys(TEACHERS).map((key) => {
             if (teacher === TEACHERS[key].name) { // сверяем есть ли в базе такой учитель
@@ -161,17 +152,19 @@ class API {
                 for (let i = 0; i < lectureId.length; i++) {
                     if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
                         teacherId = key; // присваиваем ключ учителя
-                        console.log('ID найденого в базе учителя ' + teacherId);
+                        console.info('ID найденого в базе учителя ' + teacherId);
                     } else {
-                        console.warn('Этот преподаватель ведет лекцию в это время');
+                        errArr.push('Этот преподаватель ведет лекцию в это время');
                     }
                 }
             }
+
+            return errArr;
         });
 
         if (!teacherId) { // если нет введенного учителя в базе учителей, то присваиваем ему новый id
             teacherId = firebase.database().ref().child('posts').push().key;
-            console.log('id для нового учителя ' + teacherId);
+            console.info('id для нового учителя ' + teacherId);
         }
 
         let schoolId = false;
@@ -181,17 +174,27 @@ class API {
                 for (let i = 0; i < lectureId.length; i++) {
                     if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
                         schoolId = key; // присваиваем ключ школы
-                        console.log('ID найденной в базе школы ' + schoolId);
+                        console.info('ID найденной в базе школы ' + schoolId);
                     } else {
-                        console.warn('У этой школы в это время уже есть лекция');
+                        errArr.push('У этой школы в это время уже есть лекция');
                     }
                 }
             }
+
+            return errArr;
         });
 
         if (!schoolId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
             schoolId = firebase.database().ref().child('posts').push().key;
-            console.log('id для новой школы ' + schoolId);
+            console.info('id для новой школы ' + schoolId);
+        }
+
+        function checkIfStudentsFitInClassRoom(classRoomCapacity, students, key) {
+            if (classRoomCapacity < students) {
+                errArr.push('Вместимость аудитории ' + CLASSROOMS[key].name + ' (' + classRoomCapacity + ' человек). Вы указали ' + students);
+
+                return errArr;
+            }
         }
 
         let classRoomId = false;
@@ -201,16 +204,25 @@ class API {
                 for (let i = 0; i < lectureId.length; i++) {
                     if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
                         classRoomId = key; // присваиваем ключ школы
-                        console.log('ID найденной в базе аудитории ' + classRoomId);
+                        classRoomCapacity = CLASSROOMS[key].maxStudents;
+                        console.info('ID найденной в базе аудитории ' + classRoomId);
+                        checkIfStudentsFitInClassRoom(CLASSROOMS[classRoomId].maxStudents, amountOfStudents, key);
                     } else {
-                        console.warn('В этой аудитории в это время идет лекция');
+                        errArr.push('В этой аудитории в это время идет лекция');
                     }
                 }
             }
+
+            return errArr;
         });
 
-        if (CLASSROOMS[classRoomId].maxStudents < amountOfStudents) {
-            console.warn('Вместимость аудитории classRoom (' + CLASSROOMS[classRoomId].maxStudents + ' человек). Вы указали ' + amountOfStudents);
+        if (classRoomCapacity === null) { // проверяем на тип введенных данных
+            classRoomCapacity = Number(prompt('Этой аудитории нет в базе. Введите вместимость аудитории', '20'));
+            if (isNaN(classRoomCapacity)) {
+                do {
+                    classRoomCapacity = Number(prompt('Это должно быть число, например:', '20'))
+                } while (isNaN(classRoomCapacity));
+            }
         }
 
         if (!classRoomId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
@@ -218,27 +230,27 @@ class API {
             console.log('id для новой аудитории ' + classRoomId);
         }
 
+        console.log(errArr);
         // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
-        //
         //     firebase.database().ref('lectures/' + newPostKey).set({
         //         id: newPostKey,
         //         classRoom: {
-        //             id: time,
-        //             maxStudents: amountOfStudents,
+        //             id: classRoomId,
+        //             maxStudents: classRoomCapacity,
         //             name: classRoom,
         //         },
         //         company: comp,
-        //         date: date,
-        //         endTime: date,
+        //         date: secFrom,
+        //         endTime: secTo,
         //         isDeleted: false,
         //         lecture: lect,
         //         location: loc,
         //         school: {
-        //             id: time + '1',
+        //             id: schoolId,
         //             name: sch,
         //         },
         //         teacher: {
-        //             id: time + '2',
+        //             id: teacherId,
         //             name: teacher,
         //         },
         //     });
@@ -246,6 +258,9 @@ class API {
         schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
         teacherId = false;
         classRoomId = false;
+
+        return errArr;
+
     }
 }
 

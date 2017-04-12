@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function Schedule(props) {
-	const {date, lecture, teacher, location, school, city, company, startTime, endTime, month, classRoom} = props;
+    const {date, lecture, teacher, location, school, company, startTime, endTime, month, classRoom} = props;
 
     return ( // далее отрисуем див
       <div className="schedule-container__line">
@@ -49,3 +49,16 @@ export default function Schedule(props) {
         </div>
       </div>);
 }
+
+Schedule.propTypes = {
+    date: React.PropTypes.number.isRequired,
+    month: React.PropTypes.string.isRequired,
+    lecture: React.PropTypes.string.isRequired,
+    teacher: React.PropTypes.string.isRequired,
+    location: React.PropTypes.string.isRequired,
+    school: React.PropTypes.string.isRequired,
+    company: React.PropTypes.string.isRequired,
+    startTime: React.PropTypes.string.isRequired,
+    classRoom: React.PropTypes.string.isRequired,
+    endTime: React.PropTypes.string.isRequired,
+};

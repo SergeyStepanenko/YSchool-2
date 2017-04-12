@@ -26,7 +26,6 @@ export default class ScheduleApp extends React.Component {
             displayedItem: [],
         };
         this.filter = this.filter.bind(this);
-        this.getLectures = this.getLectures.bind(this);
     }
 
     componentDidMount() {
@@ -47,10 +46,6 @@ export default class ScheduleApp extends React.Component {
                 displayedItem: FIREBASEDATA,
             });
         });
-    }
-
-    getLectures() {
-        const LECTURES = API.getLectures();
     }
 
     filter() {

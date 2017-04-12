@@ -1,5 +1,5 @@
 // import API_GUI from '../components/schedule/api_gui.jsx';
-import {checkInputFields, checkIntersection, checkIfStartTimeIsEarlierThanEndTime, matchTeacher} from '../utils/addLectureValidation.js';
+import {checkInputFields, checkIntersection, checkIfStartTimeIsEarlierThanEndTime, matchTeacher, matchSchool, matchClassRoom} from '../utils/addLectureValidation.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -126,6 +126,34 @@ class API {
 
         if (this.fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr)) {
             console.log('send data to firebase');
+
+            // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
+            //     firebase.database().ref('lectures/' + newPostKey).set({
+            //         id: newPostKey,
+            //         classRoom: {
+            //             id: classRoomId,
+            //             maxStudents: classRoomCapacity,
+            //             name: classRoom,
+            //         },
+            //         company: comp,
+            //         date: secFrom,
+            //         endTime: secTo,
+            //         isDeleted: false,
+            //         lecture: lect,
+            //         location: loc,
+            //         school: {
+            //             id: schoolId,
+            //             name: sch,
+            //         },
+            //         teacher: {
+            //             id: teacherId,
+            //             name: teacher,
+            //         },
+            //     });
+
+            // schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
+            // teacherId = false;
+            // classRoomId = false;
         }
 
         return errArr;
@@ -157,98 +185,18 @@ class API {
             return false;
         }
 
-        let schoolId = false;
-        Object.keys(SCHOOLS).map((key) => {
-            if (sch === SCHOOLS[key].name) { // сверяем есть ли в базе такая школа
-                const lectureId = SCHOOLS[key].lectures;
-                for (let i = 0; i < lectureId.length; i++) {
-                    if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
-                        schoolId = key; // присваиваем ключ школы
-                        console.info('ID найденной в базе школы ' + schoolId);
-                    } else {
-                        errArr.push('У этой школы в это время уже есть лекция');
-                    }
-                }
-            }
+        if (!matchSchool(SCHOOLS, LECTURES, sch, errArr, secFrom, secTo)) {
+            errArr.push('У этой школы в это время уже есть лекция');
 
-            return errArr;
-        });
-
-        if (!schoolId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
-            schoolId = firebase.database().ref().child('posts').push().key;
-            console.info('id для новой школы ' + schoolId);
+            return false;
         }
 
-        function checkIfStudentsFitInClassRoom(classRoomCapacity, students, key) {
-            if (classRoomCapacity < students) {
-                errArr.push('Вместимость аудитории ' + CLASSROOMS[key].name + ' (' + classRoomCapacity + ' человек). Вы указали ' + students);
+        if (!matchClassRoom(CLASSROOMS, LECTURES, classRoom, errArr, secFrom, secTo, amountOfStudents)) {
+            errArr.push('В этой аудитории в это время идет есть лекция');
 
-                // return false;
-            }
+            return false;
         }
 
-        let classRoomId = false;
-        Object.keys(CLASSROOMS).map((key) => {
-            if (classRoom === CLASSROOMS[key].name) { // сверяем есть ли в базе такая школа
-                const lectureId = CLASSROOMS[key].lectures;
-                for (let i = 0; i < lectureId.length; i++) {
-                    if (checkIntersection(secFrom, secTo, LECTURES[lectureId[i]].date, LECTURES[lectureId[i]].endTime, key)) {
-                        classRoomId = key; // присваиваем ключ школы
-                        classRoomCapacity = CLASSROOMS[key].maxStudents;
-                        console.info('ID найденной в базе аудитории ' + classRoomId);
-                        checkIfStudentsFitInClassRoom(CLASSROOMS[classRoomId].maxStudents, amountOfStudents, key);
-                    } else {
-                        errArr.push('В этой аудитории в это время идет лекция');
-
-                        // return false;
-                    }
-                }
-            }
-
-            return errArr;
-        });
-
-        if (classRoomCapacity === null) { // проверяем на тип введенных данных
-            classRoomCapacity = Number(prompt('Этой аудитории нет в базе. Введите вместимость аудитории', '20'));
-            if (isNaN(classRoomCapacity)) {
-                do {
-                    classRoomCapacity = Number(prompt('Это должно быть число, например:', '20'))
-                } while (isNaN(classRoomCapacity));
-            }
-        }
-
-        if (!classRoomId) { // если нет введенной школы в базе школ, то присваиваем ей новый id
-            classRoomId = firebase.database().ref().child('posts').push().key;
-            console.log('id для новой аудитории ' + classRoomId);
-        }
-
-        // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
-        //     firebase.database().ref('lectures/' + newPostKey).set({
-        //         id: newPostKey,
-        //         classRoom: {
-        //             id: classRoomId,
-        //             maxStudents: classRoomCapacity,
-        //             name: classRoom,
-        //         },
-        //         company: comp,
-        //         date: secFrom,
-        //         endTime: secTo,
-        //         isDeleted: false,
-        //         lecture: lect,
-        //         location: loc,
-        //         school: {
-        //             id: schoolId,
-        //             name: sch,
-        //         },
-        //         teacher: {
-        //             id: teacherId,
-        //             name: teacher,
-        //         },
-        //     });
-
-        schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
-        // teacherId = false;
-        classRoomId = false;
         errArr.push('Все проверки пройдены');
 
         return true;

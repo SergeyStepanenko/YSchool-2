@@ -1,5 +1,5 @@
 // import API_GUI from '../components/schedule/api_gui.jsx';
-import {checkInputFields, checkIfStartTimeIsEarlierThanEndTime, matchTeacher, matchByName, matchClassRoom, generateNewId, matchLectures, addClassRoomCapacity} from '../utils/addLectureValidation.js';
+import {checkInputFields, checkIfStartTimeIsEarlierThanEndTime, matchByName, generateNewId, matchLectures, addClassRoomCapacity, checkInstances} from '../utils/addLectureValidation.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -159,11 +159,14 @@ class API {
     }
 
     fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr, startT, endT, date, secFrom, secTo) {
+
         if (!checkInputFields(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc)) {
             errArr.push('Все поля должны быть заполнены');
 
             return false;
         }
+
+        checkInstances(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc);
 
         if (!checkIfStartTimeIsEarlierThanEndTime(secFrom, secTo, errArr)) {
             errArr.push('Начало лекции не может быть позже ее конца');

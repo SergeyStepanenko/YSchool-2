@@ -1,5 +1,5 @@
 // import API_GUI from '../components/schedule/api_gui.jsx';
-import {checkInputFields, checkIntersection, checkIfStartTimeIsEarlierThanEndTime, matchTeacher, matchSchool, matchClassRoom} from '../utils/addLectureValidation.js';
+import {checkInputFields, checkIfStartTimeIsEarlierThanEndTime, matchTeacher, matchByName, matchClassRoom, generateNewId, matchLectures, addClassRoomCapacity} from '../utils/addLectureValidation.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -18,6 +18,7 @@ class API {
             const teacherId = [Obj[id].teacher.id];
 
             this.teachers[teacherId] = {
+                id: Obj[id].teacher.id,
                 name: Obj[id].teacher.name,
                 lectures: [
                     ...(this.teachers[teacherId] && this.teachers[teacherId].lectures || []),
@@ -29,6 +30,7 @@ class API {
             const classRoom = Obj[id].classRoom;
 
             this.classRooms[classRoomId] = {
+                id: Obj[id].classRoom.id,
                 name: classRoom.name,
                 maxStudents: classRoom.maxStudents,
                 lectures: [
@@ -41,6 +43,7 @@ class API {
             const school = [Obj[id].school];
 
             this.schools[schoolId] = {
+                id: Obj[id].school.id,
                 name: Obj[id].school.name,
                 lectures: [
                     ...(this.schools[schoolId] && this.schools[schoolId].lectures || []),
@@ -51,7 +54,6 @@ class API {
             TEACHERS = this.teachers;
             CLASSROOMS = this.classRooms;
             SCHOOLS = this.schools;
-
             return id;
         });
         console.info('API`s ready');
@@ -107,10 +109,6 @@ class API {
         return displayedItem;
     }
 
-    test() {
-        console.log('hi');
-    }
-
     setLecture() {
         const lect = document.querySelector('#lecture').value;
         const teacher = document.querySelector('#teacher').value;
@@ -123,50 +121,44 @@ class API {
         const loc = document.querySelector('#location').value;
         const inputDate = document.querySelector('#date').value;
         const errArr = [];
-
-        if (this.fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr)) {
-            console.log('send data to firebase');
-
-            // const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
-            //     firebase.database().ref('lectures/' + newPostKey).set({
-            //         id: newPostKey,
-            //         classRoom: {
-            //             id: classRoomId,
-            //             maxStudents: classRoomCapacity,
-            //             name: classRoom,
-            //         },
-            //         company: comp,
-            //         date: secFrom,
-            //         endTime: secTo,
-            //         isDeleted: false,
-            //         lecture: lect,
-            //         location: loc,
-            //         school: {
-            //             id: schoolId,
-            //             name: sch,
-            //         },
-            //         teacher: {
-            //             id: teacherId,
-            //             name: teacher,
-            //         },
-            //     });
-
-            // schoolId = false; // обнуляем значение на случай если будет добавлено более 1й лекции подряд
-            // teacherId = false;
-            // classRoomId = false;
-        }
-
-        return errArr;
-    }
-
-    fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr) {
         const startT = inputStartTime.split(':');
         const endT = inputEndTime.split(':');
         const date = inputDate.split('-');
         const secFrom = new Date(date[0], date[1] - 1, date[2], startT[0], startT[1]).getTime();
         const secTo = new Date(date[0], date[1] - 1, date[2], endT[0], endT[1]).getTime();
-        let classRoomCapacity = null;
 
+        const validatedData = this.fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr, startT, endT, date, secFrom, secTo);
+
+        if (validatedData) {
+            const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
+                firebase.database().ref('lectures/' + newPostKey).set({
+                    id: newPostKey,
+                    classRoom: {
+                        id: validatedData.cRiD,
+                        maxStudents: validatedData.cRcP,
+                        name: classRoom,
+                    },
+                    company: comp,
+                    date: secFrom,
+                    endTime: secTo,
+                    isDeleted: false,
+                    lecture: lect,
+                    location: loc,
+                    school: {
+                        id: validatedData.sCiD,
+                        name: sch,
+                    },
+                    teacher: {
+                        id: validatedData.tCiD,
+                        name: teacher,
+                    },
+                });
+        }
+
+        return errArr;
+    }
+
+    fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr, startT, endT, date, secFrom, secTo) {
         if (!checkInputFields(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc)) {
             errArr.push('Все поля должны быть заполнены');
 
@@ -178,28 +170,59 @@ class API {
 
             return false;
         }
+// проверка учителя
+        let teacherId = matchByName(TEACHERS, teacher); // если id учителя есть в базе - этот id присваивается переменной
+        if (teacherId) { // если id учителя найден - мы ищем лекции, которые ведет этот учитель и сверяем по времени, есть ли пересечения
+            const noIntersections = matchLectures(TEACHERS, LECTURES, teacherId, secFrom, secTo);
+            if (!noIntersections) { // если есть пересечения - выводим ошибку
+                errArr.push('Этот преподаватель ведет лекцию в это время');
 
-        if (!matchTeacher(TEACHERS, LECTURES, teacher, errArr, secFrom, secTo)) {
-            errArr.push('Этот преподаватель ведет лекцию в это время');
+                return false;
+            }
+        }
+        if (!teacherId) teacherId = generateNewId(); // если его нет - генерится новый
+// проверка школы
+        let schoolId = matchByName(SCHOOLS, sch); // если id школы есть в базе - этот id присваивается переменной
+        if (schoolId) { // если id школы найден - мы ищем лекции в базе, которые идут у этой школы и сверяем по времени, есть ли пересечения
+            const noIntersections = matchLectures(SCHOOLS, LECTURES, schoolId, secFrom, secTo);
+            if (!noIntersections) { // если есть пересечения - выводим ошибку
+                errArr.push('У этой школы в это время идет другая лекция');
+
+                return false;
+            }
+        }
+        if (!schoolId) schoolId = generateNewId(); // если его нет - генерится новый
+// проверка аудитории
+        let classRoomId = matchByName(CLASSROOMS, classRoom); // если id аудитории есть в базе - этот id присваивается переменной
+        if (classRoomId) { // если id аудитории найден - мы ищем лекции в базе, которые идут в этой аудитории и сверяем по времени, есть ли пересечения
+            const noIntersections = matchLectures(CLASSROOMS, LECTURES, classRoomId, secFrom, secTo);
+            if (!noIntersections) { // если есть пересечения - выводим ошибку
+                errArr.push('В этой аудитории в это время идет другая лекция');
+
+                return false;
+            }
+        }
+
+        const classRoomCapacity = addClassRoomCapacity(CLASSROOMS, classRoomId);
+
+        if (amountOfStudents > classRoomCapacity) {
+            errArr.push('Вместимость этой аудитории(' + classRoomCapacity + ' человек). Вы указали ' + amountOfStudents);
 
             return false;
         }
 
-        if (!matchSchool(SCHOOLS, LECTURES, sch, errArr, secFrom, secTo)) {
-            errArr.push('У этой школы в это время уже есть лекция');
+        if (!classRoomId) classRoomId = generateNewId(); // если его нет - генерится новый
 
-            return false;
-        }
-
-        if (!matchClassRoom(CLASSROOMS, LECTURES, classRoom, errArr, secFrom, secTo, amountOfStudents)) {
-            errArr.push('В этой аудитории в это время идет есть лекция');
-
-            return false;
-        }
+        const validatedData = {
+            cRiD: classRoomId,
+            cRcP: classRoomCapacity,
+            sCiD: schoolId,
+            tCiD: teacherId,
+        };
 
         errArr.push('Все проверки пройдены');
 
-        return true;
+        return validatedData;
     }
 }
 

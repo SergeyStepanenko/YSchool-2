@@ -1,1 +1,1 @@
-Yandex Assignment #2
+Yandex Assignment2

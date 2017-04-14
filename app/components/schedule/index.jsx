@@ -6,16 +6,16 @@ import convert from '../../utils/convert.js'; // конвертирую паде
 import Filter from '../schedule/filter.jsx';
 import properTime from '../../utils/time.js'; // исправляю нюанс вывода времени (прим. 12:0 -> 12:00 (с учетом проверки))
 import Schedule from './schedule.jsx';
+import getProperDate from '../../utils/properDate.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
 
 let FIREBASEDATA = [];
-// let TEACHERS = [];
-// let SCHOOLS = [];
 let classRooms = [];
 let teachers = [];
 let schools = [];
+let dates = [];
 
 export default class ScheduleApp extends React.Component {
     constructor() {
@@ -49,6 +49,13 @@ export default class ScheduleApp extends React.Component {
             teachers = API.teachers;
             schools = API.schools;
 
+            for (let i = 0; i < FIREBASEDATA.length; i++) {
+                const path = FIREBASEDATA[i].date;
+                dates.push(getProperDate(path));
+            }
+
+            dates = [...new Set(dates)];
+
             this.setState({
                 displayedItem: FIREBASEDATA,
             });
@@ -76,8 +83,34 @@ export default class ScheduleApp extends React.Component {
             <Link to="api">API</Link>
             <div className="schedule-container">
               <div className="schedule-container__filters">
-                <input id="dateFrom" className="input" type="date" onChange={this.filter}/>
-                <input id="dateTo" className="input" type="date" onChange={this.filter}/>
+                {/* <input id="dateFrom" className="input" type="date" onChange={this.filter}/> */}
+
+                <select id="dateFrom" className="input" onChange={this.filter}>
+                  <option>С</option>
+                  {
+                      dates.map((key, index) => {
+                          return (
+                            <Filter
+                              key={index}
+                              value={key}
+                              />);
+                      })
+                  }
+                </select>
+
+                <select id="dateTo" className="input" onChange={this.filter}>
+                  <option>По</option>
+                  {
+                      dates.map((key, index) => {
+                          return (
+                            <Filter
+                              key={index}
+                              value={key}
+                              />);
+                      })
+                  }
+                </select>
+
                 <select id="teacher" className="input" onChange={this.filter}>
                   <option>Все</option>
                   {

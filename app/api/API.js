@@ -50,6 +50,7 @@ class API {
                     id
                 ],
             };
+
             LECTURES = this.lectures;
             TEACHERS = this.teachers;
             CLASSROOMS = this.classRooms;
@@ -70,7 +71,6 @@ class API {
 
     filter(FIREBASEDATA, dF, dT, t, sC, cR) {
         let displayedItem = FIREBASEDATA;
-
         displayedItem = displayedItem.filter((el) => { // фильтрация по датам
             if (isNaN(dF) && isNaN(dT)) {
                 return true;

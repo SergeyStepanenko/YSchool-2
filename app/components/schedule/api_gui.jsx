@@ -3,11 +3,16 @@ import {Link} from 'react-router';
 
 import API from '../../api/API.js';
 
+const database = firebase.database();
+const rootRef = database.ref('lectures');
+let FIREBASEDATA = [];
+
 export default class API_GUI extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             errorList: [''],
+            lectures: [],
         };
         this.showSubmissionResult = this.showSubmissionResult.bind(this);
     }
@@ -16,6 +21,22 @@ export default class API_GUI extends React.Component {
         const errArr = API.setLecture();
         this.setState({
             errorList: errArr,
+        });
+    }
+
+    componentDidMount() {
+        rootRef.on('value', (snap) => {
+            FIREBASEDATA = [];
+            const Obj = snap.val();
+            for (const x in Obj) {
+                if (Object.prototype.hasOwnProperty.call(Obj, x)) {
+                    FIREBASEDATA.push(Obj[x]);
+                }
+            }
+
+            this.setState({
+                lectures: FIREBASEDATA,
+            });
         });
     }
 
@@ -46,11 +67,53 @@ export default class API_GUI extends React.Component {
                 })
               }
             </section>
+            <section className="lectures">
+              {
+                this.state.lectures.map((el, index) => {
+                    const dateSring = new Date(Number(el.date));
+                    // if (dateSring) {
+                    //
+                    // }
+
+                    return (
+                      <DisplayLectures
+                        key={index}
+                        fullDate={
+                            dateSring.getFullYear() + '-0' +
+                            dateSring.getMonth() + '-' +
+                            dateSring.getDate()}
+                        />
+                    );
+                })
+              }
+            </section>
           </div>
 
         );
     }
 }
+
+function DisplayLectures(props) {
+    const {fullDate} = props;
+
+    return (
+      <div className="lectures__lecture">
+        <input defaultValue={fullDate}/>
+        {/* <div>Date to</div>
+        <div>Lecture name</div>
+        <div>Teacher</div>
+        <div>Company</div>
+        <div>School</div>
+        <div>Class Room</div>
+        <div>Class Room Capacity</div>
+        <div>Location</div> */}
+      </div>
+    );
+}
+
+DisplayLectures.propTypes = {
+    fullDate: React.PropTypes.string.isRequired,
+};
 
 function Show(props) {
     const {error} = props;

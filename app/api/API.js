@@ -1,10 +1,11 @@
-// import API_GUI from '../components/schedule/api_gui.jsx';
 import {checkInputFields, checkIfStartTimeIsEarlierThanEndTime, matchByName, generateNewId, matchLectures, addClassRoomCapacity, checkInstances} from '../utils/addLectureValidation.js';
 
 const database = firebase.database();
-const rootRef = database.ref('lectures');
 
-let LECTURES, TEACHERS, CLASSROOMS, SCHOOLS;
+let LECTURES;
+let TEACHERS;
+let CLASSROOMS;
+let SCHOOLS;
 
 class API {
     initialize(Obj) {
@@ -40,7 +41,6 @@ class API {
             };
 
             const schoolId = [Obj[id].school.id];
-            const school = [Obj[id].school];
 
             this.schools[schoolId] = {
                 id: Obj[id].school.id,
@@ -54,6 +54,7 @@ class API {
             TEACHERS = this.teachers;
             CLASSROOMS = this.classRooms;
             SCHOOLS = this.schools;
+
             return id;
         });
         console.info('API`s ready');
@@ -159,7 +160,6 @@ class API {
     }
 
     fullValidation(lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc, inputDate, errArr, startT, endT, date, secFrom, secTo) {
-
         if (!checkInputFields(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc)) {
             errArr.push('Все поля должны быть заполнены');
 
@@ -183,7 +183,7 @@ class API {
                 return false;
             }
         }
-        if (!teacherId) teacherId = generateNewId(); // если его нет - генерится новый
+        if (!teacherId) teacherId = generateNewId(); // если его нет - генерится новый id
 // проверка школы
         let schoolId = matchByName(SCHOOLS, sch); // если id школы есть в базе - этот id присваивается переменной
         if (schoolId) { // если id школы найден - мы ищем лекции в базе, которые идут у этой школы и сверяем по времени, есть ли пересечения
@@ -214,7 +214,7 @@ class API {
             return false;
         }
 
-        if (!classRoomId) classRoomId = generateNewId(); // если его нет - генерится новый
+        if (!classRoomId) classRoomId = generateNewId(); // если его нет - генерится новый id
 
         const validatedData = {
             cRiD: classRoomId,

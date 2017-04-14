@@ -17,14 +17,14 @@ export function checkInputFields(inputDate, lect, teacher, comp, sch, inputStart
 
 export function checkInstances(inputDate, lect, teacher, comp, sch, inputStartTime, inputEndTime, classRoom, amountOfStudents, loc) {
 
-    console.log(lect instanceof String);
-    console.log(typeof(inputDate));
-    console.log(typeof(lect));
-    console.log(typeof(teacher));
-    console.log(typeof(comp));
-    console.log(typeof(sch));
-    console.log(typeof(inputStartTime));
-    console.log(typeof(amountOfStudents));
+    // console.log(lect instanceof String);
+    // console.log(typeof(inputDate));
+    // console.log(typeof(lect));
+    // console.log(typeof(teacher));
+    // console.log(typeof(comp));
+    // console.log(typeof(sch));
+    // console.log(typeof(inputStartTime));
+    // console.log(typeof(amountOfStudents));
     // if (true) {
     //     return false;
     // }

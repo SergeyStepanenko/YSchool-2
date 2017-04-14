@@ -10,10 +10,9 @@ import Schedule from './schedule.jsx';
 const database = firebase.database();
 const rootRef = database.ref('lectures');
 
-let FIREBASEDATA = [],
-    TEACHERS = [],
-    SCHOOLS = [];
-    // CLASSROOMS = [];
+let FIREBASEDATA = [];
+// let TEACHERS = [];
+// let SCHOOLS = [];
 let classRooms = [];
 let teachers = [];
 let schools = [];
@@ -34,9 +33,17 @@ export default class ScheduleApp extends React.Component {
             const Obj = snap.val();
             for (const x in Obj) {
                 if (Object.prototype.hasOwnProperty.call(Obj, x)) {
-                    FIREBASEDATA.push(Obj[x]);
+                    if (Obj[x].isDeleted === false) { // если флаг isDeleter === true, мы не показываем эту лекцию в списке
+                        FIREBASEDATA.push(Obj[x]);
+                    }
                 }
             }
+            FIREBASEDATA = FIREBASEDATA.sort((a, b) => { // сортируем лекции дате
+                if (a.date < b.date) return -1;
+                if (a.date > b.date) return 1;
+
+                return 0;
+            });
 
             classRooms = API.classRooms;
             teachers = API.teachers;
@@ -110,24 +117,24 @@ export default class ScheduleApp extends React.Component {
               </div>
 
               {
-    this.state.displayedItem.map((el, index) => {
-        return (
-          <Schedule
-            key={index}
-            date={new Date(Number(el.date)).getDate()}
-            month={convert(Number(el.date))}
-            lecture={el.lecture}
-            teacher={el.teacher.name}
-            location={el.location}
-            school={el.school.name}
-            city={el.city}
-            company={el.company}
-            room={el.classRoom}
-            startTime={properTime(el.date)}
-            classRoom={el.classRoom.name}
-            endTime={properTime(el.endTime)}
-            />);
-    })
+        this.state.displayedItem.map((el, index) => {
+            return (
+              <Schedule
+                key={index}
+                date={new Date(Number(el.date)).getDate()}
+                month={convert(Number(el.date))}
+                lecture={el.lecture}
+                teacher={el.teacher.name}
+                location={el.location}
+                school={el.school.name}
+                city={el.city}
+                company={el.company}
+                room={el.classRoom}
+                startTime={properTime(el.date)}
+                classRoom={el.classRoom.name}
+                endTime={properTime(el.endTime)}
+                />);
+        })
             }
             </div>
           </div>

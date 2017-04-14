@@ -54,6 +54,13 @@ export default class ScheduleApp extends React.Component {
                 dates.push(getProperDate(path));
             }
 
+            dates = dates.sort((a, b) => { // сортируем лекции дате
+                if (a < b) return -1;
+                if (a > b) return 1;
+
+                return 0;
+            });
+
             dates = [...new Set(dates)];
 
             this.setState({
@@ -83,8 +90,6 @@ export default class ScheduleApp extends React.Component {
             <Link to="api">API</Link>
             <div className="schedule-container">
               <div className="schedule-container__filters">
-                {/* <input id="dateFrom" className="input" type="date" onChange={this.filter}/> */}
-
                 <select id="dateFrom" className="input" onChange={this.filter}>
                   <option>С</option>
                   {
@@ -97,7 +102,6 @@ export default class ScheduleApp extends React.Component {
                       })
                   }
                 </select>
-
                 <select id="dateTo" className="input" onChange={this.filter}>
                   <option>По</option>
                   {

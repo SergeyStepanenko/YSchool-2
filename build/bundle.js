@@ -5214,7 +5214,7 @@ var API = function () {
 
             displayedItem = displayedItem.filter(function (el) {
                 // фильтрация по лектору
-                if (t === 'Все') {
+                if (t === 'Все преподаватели') {
                     return true;
                 } else if (t === el.teacher.name) {
                     return true;
@@ -5223,7 +5223,7 @@ var API = function () {
 
             displayedItem = displayedItem.filter(function (el) {
                 // фильтрация по школе
-                if (sC === 'Все') {
+                if (sC === 'Все школы') {
                     return true;
                 } else if (sC === el.school.name) {
                     return true;
@@ -5232,7 +5232,7 @@ var API = function () {
 
             displayedItem = displayedItem.filter(function (el) {
                 // фильтрация по classRoom
-                if (cR === 'Все') {
+                if (cR === 'Все аудитории') {
                     return true;
                 } else if (cR === el.classRoom.name) {
                     return true;
@@ -5287,6 +5287,7 @@ var API = function () {
                         name: teacher
                     }
                 });
+                alert('Лекция добавлена');
             }
 
             return errArr;
@@ -5363,7 +5364,7 @@ var API = function () {
                 tCiD: teacherId
             };
 
-            errArr.push('Все проверки пройдены');
+            // errArr.push('Все проверки пройдены');
 
             return validatedData;
         }
@@ -13921,6 +13922,10 @@ var _API = __webpack_require__(44);
 
 var _API2 = _interopRequireDefault(_API);
 
+var _properDate = __webpack_require__(125);
+
+var _properDate2 = _interopRequireDefault(_properDate);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14035,16 +14040,21 @@ var API_GUI = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     'section',
-                    { className: 'lectures' },
+                    { className: 'api__lectures' },
                     this.state.lectures.map(function (el, index) {
-                        var dateSring = new Date(Number(el.date));
-                        // if (dateSring) {
-                        //
-                        // }
-
                         return _react2.default.createElement(DisplayLectures, {
                             key: index,
-                            fullDate: dateSring.getFullYear() + '-0' + dateSring.getMonth() + '-' + dateSring.getDate()
+                            fullDate: (0, _properDate2.default)(el.date),
+                            lecture: el.lecture,
+                            teacher: el.teacher.name,
+                            company: el.company,
+                            school: el.school.name,
+                            startTime: el.date,
+                            endTime: el.endTime,
+                            classRoom: el.classRoom.name,
+                            classRoomCapacity: el.classRoom.maxStudents,
+                            location: el.location,
+                            isDeleted: el.isDeleted
                         });
                     })
                 )
@@ -14059,18 +14069,59 @@ exports.default = API_GUI;
 
 
 function DisplayLectures(props) {
-    var fullDate = props.fullDate;
+    var fullDate = props.fullDate,
+        lecture = props.lecture,
+        teacher = props.teacher,
+        company = props.company,
+        school = props.school,
+        startTime = props.startTime,
+        endTime = props.endTime,
+        classRoom = props.classRoom,
+        classRoomCapacity = props.classRoomCapacity,
+        location = props.location,
+        isDeleted = props.isDeleted;
 
 
     return _react2.default.createElement(
         'div',
-        { className: 'lectures__lecture' },
-        _react2.default.createElement('input', { defaultValue: fullDate })
+        { className: 'api__lectures__line' },
+        _react2.default.createElement('input', { defaultValue: fullDate }),
+        _react2.default.createElement('input', { id: 'lecture', defaultValue: lecture }),
+        _react2.default.createElement('input', { defaultValue: teacher }),
+        _react2.default.createElement('input', { defaultValue: company }),
+        _react2.default.createElement('input', { defaultValue: school }),
+        _react2.default.createElement('input', { defaultValue: startTime }),
+        _react2.default.createElement('input', { defaultValue: endTime }),
+        _react2.default.createElement('input', { defaultValue: classRoom }),
+        _react2.default.createElement('input', { defaultValue: classRoomCapacity }),
+        _react2.default.createElement('input', { defaultValue: location }),
+        _react2.default.createElement('input', { defaultValue: isDeleted }),
+        _react2.default.createElement(
+            'button',
+            { id: 'changeBtn' },
+            'Change'
+        ),
+        _react2.default.createElement(
+            'button',
+            { id: 'deleteBtn' },
+            'Delete'
+        )
     );
 }
 
 DisplayLectures.propTypes = {
-    fullDate: _react2.default.PropTypes.string.isRequired
+    fullDate: _react2.default.PropTypes.string.isRequired,
+    lecture: _react2.default.PropTypes.string.isRequired,
+    teacher: _react2.default.PropTypes.string.isRequired,
+    company: _react2.default.PropTypes.string.isRequired,
+    school: _react2.default.PropTypes.string.isRequired,
+    startTime: _react2.default.PropTypes.string.isRequired,
+    endTime: _react2.default.PropTypes.string.isRequired,
+    classRoom: _react2.default.PropTypes.string.isRequired,
+    classRoomCapacity: _react2.default.PropTypes.string.isRequired,
+    location: _react2.default.PropTypes.string.isRequired,
+    isDeleted: _react2.default.PropTypes.string.isRequired
+
 };
 
 function Show(props) {
@@ -14289,7 +14340,7 @@ var ScheduleApp = function (_React$Component) {
                             _react2.default.createElement(
                                 'option',
                                 null,
-                                '\u0412\u0441\u0435'
+                                '\u0412\u0441\u0435 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0438'
                             ),
                             Object.keys(teachers).map(function (key, index) {
                                 return _react2.default.createElement(_filter2.default, {
@@ -14304,7 +14355,7 @@ var ScheduleApp = function (_React$Component) {
                             _react2.default.createElement(
                                 'option',
                                 { className: 'option' },
-                                '\u0412\u0441\u0435'
+                                '\u0412\u0441\u0435 \u0448\u043A\u043E\u043B\u044B'
                             ),
                             Object.keys(schools).map(function (key, index) {
                                 return _react2.default.createElement(_filter2.default, {
@@ -14319,7 +14370,7 @@ var ScheduleApp = function (_React$Component) {
                             _react2.default.createElement(
                                 'option',
                                 null,
-                                '\u0412\u0441\u0435'
+                                '\u0412\u0441\u0435 \u0430\u0443\u0434\u0438\u0442\u043E\u0440\u0438\u0438'
                             ),
                             Object.keys(classRooms).map(function (key, index) {
                                 return _react2.default.createElement(_filter2.default, {
@@ -14724,16 +14775,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = getProperDate;
 function getProperDate(seconds) {
-    var month = new Date(seconds).getMonth();
+    var month = new Date(seconds).getMonth() + 1;
     if (month.toString().length === 1) {
-        // month = '0' + (month + 1);
-        month = month + 1;
+        month = '0' + month;
     }
 
     var day = new Date(seconds).getDate();
-    // if (day.toString().length === 1) {
-    //     day = '0' + day;
-    // }
+    if (day.toString().length === 1) {
+        day = '0' + day;
+    }
 
     return new Date(seconds).getFullYear() + '-' + month + '-' + day;
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router';
 
 import API from '../../api/API.js';
+import getProperDate from '../../utils/properDate.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -67,21 +68,23 @@ export default class API_GUI extends React.Component {
                 })
               }
             </section>
-            <section className="lectures">
+            <section className="api__lectures">
               {
                 this.state.lectures.map((el, index) => {
-                    const dateSring = new Date(Number(el.date));
-                    // if (dateSring) {
-                    //
-                    // }
-
                     return (
                       <DisplayLectures
                         key={index}
-                        fullDate={
-                            dateSring.getFullYear() + '-0' +
-                            dateSring.getMonth() + '-' +
-                            dateSring.getDate()}
+                        fullDate={getProperDate(el.date)}
+                        lecture={el.lecture}
+                        teacher={el.teacher.name}
+                        company={el.company}
+                        school={el.school.name}
+                        startTime={el.date}
+                        endTime={el.endTime}
+                        classRoom={el.classRoom.name}
+                        classRoomCapacity={el.classRoom.maxStudents}
+                        location={el.location}
+                        isDeleted={el.isDeleted}
                         />
                     );
                 })
@@ -94,25 +97,40 @@ export default class API_GUI extends React.Component {
 }
 
 function DisplayLectures(props) {
-    const {fullDate} = props;
+    const {fullDate, lecture, teacher, company, school, startTime, endTime, classRoom, classRoomCapacity, location, isDeleted} = props;
 
     return (
-      <div className="lectures__lecture">
+      <div className="api__lectures__line">
         <input defaultValue={fullDate}/>
-        {/* <div>Date to</div>
-        <div>Lecture name</div>
-        <div>Teacher</div>
-        <div>Company</div>
-        <div>School</div>
-        <div>Class Room</div>
-        <div>Class Room Capacity</div>
-        <div>Location</div> */}
+        <input id="lecture" defaultValue={lecture}/>
+        <input defaultValue={teacher}/>
+        <input defaultValue={company}/>
+        <input defaultValue={school}/>
+        <input defaultValue={startTime}/>
+        <input defaultValue={endTime}/>
+        <input defaultValue={classRoom}/>
+        <input defaultValue={classRoomCapacity}/>
+        <input defaultValue={location}/>
+        <input defaultValue={isDeleted}/>
+        <button id="changeBtn">Change</button>
+        <button id="deleteBtn">Delete</button>
       </div>
     );
 }
 
 DisplayLectures.propTypes = {
     fullDate: React.PropTypes.string.isRequired,
+    lecture: React.PropTypes.string.isRequired,
+    teacher: React.PropTypes.string.isRequired,
+    company: React.PropTypes.string.isRequired,
+    school: React.PropTypes.string.isRequired,
+    startTime: React.PropTypes.string.isRequired,
+    endTime: React.PropTypes.string.isRequired,
+    classRoom: React.PropTypes.string.isRequired,
+    classRoomCapacity: React.PropTypes.string.isRequired,
+    location: React.PropTypes.string.isRequired,
+    isDeleted: React.PropTypes.string.isRequired,
+
 };
 
 function Show(props) {

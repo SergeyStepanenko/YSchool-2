@@ -84,7 +84,7 @@ class API {
         });
 
         displayedItem = displayedItem.filter((el) => { // фильтрация по лектору
-            if (t === 'Все') {
+            if (t === 'Все преподаватели') {
                 return true;
             } else if (t === el.teacher.name) {
                 return true;
@@ -92,7 +92,7 @@ class API {
         });
 
         displayedItem = displayedItem.filter((el) => { // фильтрация по школе
-            if (sC === 'Все') {
+            if (sC === 'Все школы') {
                 return true;
             } else if (sC === el.school.name) {
                 return true;
@@ -100,7 +100,7 @@ class API {
         });
 
         displayedItem = displayedItem.filter((el) => { // фильтрация по classRoom
-            if (cR === 'Все') {
+            if (cR === 'Все аудитории') {
                 return true;
             } else if (cR === el.classRoom.name) {
                 return true;
@@ -132,28 +132,29 @@ class API {
 
         if (validatedData) {
             const newPostKey = firebase.database().ref().child('posts').push().key; // генерим уникальный id
-                firebase.database().ref('lectures/' + newPostKey).set({
-                    id: newPostKey,
-                    classRoom: {
-                        id: validatedData.cRiD,
-                        maxStudents: validatedData.cRcP,
-                        name: classRoom,
-                    },
-                    company: comp,
-                    date: secFrom,
-                    endTime: secTo,
-                    isDeleted: false,
-                    lecture: lect,
-                    location: loc,
-                    school: {
-                        id: validatedData.sCiD,
-                        name: sch,
-                    },
-                    teacher: {
-                        id: validatedData.tCiD,
-                        name: teacher,
-                    },
-                });
+            firebase.database().ref('lectures/' + newPostKey).set({
+                id: newPostKey,
+                classRoom: {
+                    id: validatedData.cRiD,
+                    maxStudents: validatedData.cRcP,
+                    name: classRoom,
+                },
+                company: comp,
+                date: secFrom,
+                endTime: secTo,
+                isDeleted: false,
+                lecture: lect,
+                location: loc,
+                school: {
+                    id: validatedData.sCiD,
+                    name: sch,
+                },
+                teacher: {
+                    id: validatedData.tCiD,
+                    name: teacher,
+                },
+            });
+            alert('Лекция добавлена');
         }
 
         return errArr;
@@ -223,7 +224,7 @@ class API {
             tCiD: teacherId,
         };
 
-        errArr.push('Все проверки пройдены');
+        // errArr.push('Все проверки пройдены');
 
         return validatedData;
     }

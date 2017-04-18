@@ -27,7 +27,7 @@ export default class ScheduleApp extends React.Component {
         this.filter = this.filter.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         rootRef.on('value', (snap) => {
             FIREBASEDATA = [];
             const Obj = snap.val();
@@ -70,8 +70,19 @@ export default class ScheduleApp extends React.Component {
     }
 
     filter() {
-        const dateFrom = document.querySelector('#dateFrom').value.replace('-', ', ');
-        const dateTo = document.querySelector('#dateTo').value.replace('-', ', ');
+        const isIE = /*@cc_on!@*/false || !!document.documentMode;
+        const isEdge = !isIE && !!window.StyleMedia;
+        let dateTo;
+        let dateFrom;
+
+        if (isIE || isEdge) { // исправляем баг с датой в IE & EDGE
+            dateFrom = document.querySelector('#dateFrom').value.replace(/-/, ', ');
+            dateTo = document.querySelector('#dateTo').value.replace(/-/, ', ');
+        } else {
+            dateFrom = document.querySelector('#dateFrom').value.replace(/-/g, ', ');
+            dateTo = document.querySelector('#dateTo').value.replace(/-/g, ', ');
+        }
+
         const dF = new Date(dateFrom).getTime();
         const dT = new Date(dateTo).getTime();
         const t = document.querySelector('#teacher').value;

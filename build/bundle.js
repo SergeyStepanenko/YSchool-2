@@ -14009,8 +14009,8 @@ var API_GUI = function (_React$Component) {
             });
         }
     }, {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
+        key: 'componentWillMount',
+        value: function componentWillMount() {
             var _this2 = this;
 
             rootRef.on('value', function (snap) {
@@ -14061,10 +14061,10 @@ var API_GUI = function (_React$Component) {
                     _react2.default.createElement('input', { id: 'school', type: 'text', defaultValue: '\u0428\u043A\u043E\u043B\u0430 \u041C\u043E\u0431\u0438\u043B\u044C\u043D\u043E\u0433\u043E \u0414\u0438\u0437\u0430\u0439\u043D\u0430', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435   \u0448\u043A\u043E\u043B\u0443' }),
                     _react2.default.createElement('br', null),
                     '\u041D\u0430\u0447\u0430\u043B\u043E \u043B\u0435\u043A\u0446\u0438\u0438 ',
-                    _react2.default.createElement('input', { id: 'startTime', defaultValue: '12:00', type: 'time' }),
+                    _react2.default.createElement('input', { id: 'startTime', defaultValue: '12:00', type: 'text' }),
                     _react2.default.createElement('br', null),
                     '\u041A\u043E\u043D\u0435\u0446 \u043B\u0435\u043A\u0446\u0438\u0438 ',
-                    _react2.default.createElement('input', { id: 'endTime', defaultValue: '13:30', type: 'time' }),
+                    _react2.default.createElement('input', { id: 'endTime', defaultValue: '13:30', type: 'text' }),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement('input', { id: 'classRoom', type: 'text', defaultValue: '\u0417\u0435\u043B\u0435\u043D\u044B\u0439 \u043A\u0438\u0442', placeholder: '\u0410\u0443\u0434\u0438\u0442\u043E\u0440\u0438\u044F' }),
                     _react2.default.createElement('br', null),
@@ -14352,8 +14352,8 @@ var ScheduleApp = function (_React$Component) {
     }
 
     _createClass(ScheduleApp, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
+        key: 'componentWillMount',
+        value: function componentWillMount() {
             var _this2 = this;
 
             rootRef.on('value', function (snap) {
@@ -14402,8 +14402,20 @@ var ScheduleApp = function (_React$Component) {
     }, {
         key: 'filter',
         value: function filter() {
-            var dateFrom = document.querySelector('#dateFrom').value.replace('-', ', ');
-            var dateTo = document.querySelector('#dateTo').value.replace('-', ', ');
+            var isIE = /*@cc_on!@*/false || !!document.documentMode;
+            var isEdge = !isIE && !!window.StyleMedia;
+            var dateTo = void 0;
+            var dateFrom = void 0;
+
+            if (isIE || isEdge) {
+                // исправляем баг с датой в IE & EDGE
+                dateFrom = document.querySelector('#dateFrom').value.replace(/-/, ', ');
+                dateTo = document.querySelector('#dateTo').value.replace(/-/, ', ');
+            } else {
+                dateFrom = document.querySelector('#dateFrom').value.replace(/-/g, ', ');
+                dateTo = document.querySelector('#dateTo').value.replace(/-/g, ', ');
+            }
+
             var dF = new Date(dateFrom).getTime();
             var dT = new Date(dateTo).getTime();
             var t = document.querySelector('#teacher').value;

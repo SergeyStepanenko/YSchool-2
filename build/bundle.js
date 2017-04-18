@@ -5214,7 +5214,7 @@ var API = function () {
 
             displayedItem = displayedItem.filter(function (el) {
                 // фильтрация по лектору
-                if (t === 'Все') {
+                if (t === 'Все преподаватели') {
                     return true;
                 } else if (t === el.teacher.name) {
                     return true;
@@ -5223,7 +5223,7 @@ var API = function () {
 
             displayedItem = displayedItem.filter(function (el) {
                 // фильтрация по школе
-                if (sC === 'Все') {
+                if (sC === 'Все школы') {
                     return true;
                 } else if (sC === el.school.name) {
                     return true;
@@ -5232,7 +5232,7 @@ var API = function () {
 
             displayedItem = displayedItem.filter(function (el) {
                 // фильтрация по classRoom
-                if (cR === 'Все') {
+                if (cR === 'Все аудитории') {
                     return true;
                 } else if (cR === el.classRoom.name) {
                     return true;
@@ -5287,6 +5287,7 @@ var API = function () {
                         name: teacher
                     }
                 });
+                alert('Лекция добавлена');
             }
 
             return errArr;
@@ -5363,7 +5364,7 @@ var API = function () {
                 tCiD: teacherId
             };
 
-            errArr.push('Все проверки пройдены');
+            // errArr.push('Все проверки пройдены');
 
             return validatedData;
         }
@@ -8285,14 +8286,14 @@ function getProperDate(seconds) {
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.default = properTime;
-function properTime(fromSeconds) {
-  var minutes = new Date(+fromSeconds).getMinutes();
+function properTime(seconds) {
+    var minutes = new Date(Number(seconds)).getMinutes();
 
-  return new Date(+fromSeconds).getHours() + ":" + (minutes.toString().length == 1 ? minutes + "0" : minutes);
-};
+    return new Date(Number(seconds)).getHours() + ':' + (minutes.toString().length === 1 ? minutes + '0' : minutes);
+}
 
 /***/ }),
 /* 73 */
@@ -13963,13 +13964,14 @@ var _API = __webpack_require__(44);
 
 var _API2 = _interopRequireDefault(_API);
 
-<<<<<<< HEAD
 var _properDate = __webpack_require__(71);
 
 var _properDate2 = _interopRequireDefault(_properDate);
 
-=======
->>>>>>> parent of 228cad2... вывел список лекций для редактирования и удаления
+var _time = __webpack_require__(72);
+
+var _time2 = _interopRequireDefault(_time);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14084,16 +14086,90 @@ var API_GUI = function (_React$Component) {
                 ),
                 _react2.default.createElement(
                     'section',
-                    { className: 'lectures' },
+                    { className: 'api__lectures' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'api__lectures__header' },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__date' },
+                            '\u0414\u0430\u0442\u0430'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__lecture' },
+                            '\u041B\u0435\u043A\u0446\u0438\u044F'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__teacher' },
+                            '\u041F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044C'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__company' },
+                            '\u041A\u043E\u043C\u043F\u0430\u043D\u0438\u044F'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__school' },
+                            '\u0428\u043A\u043E\u043B\u0430'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__startTime' },
+                            '\u041D\u0430\u0447\u0430\u043B\u043E'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__endTime' },
+                            '\u041A\u043E\u043D\u0435\u0446'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__classRoom' },
+                            '\u0410\u0443\u0434\u0438\u0442\u043E\u0440\u0438\u044F'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__classRoomCapacity' },
+                            '\u0412\u043C\u0435\u0441\u0442\u0438\u043C\u043E\u0441\u0442\u044C \u0430\u0443\u0434\u0438\u0442\u043E\u0440\u0438\u0438'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__location' },
+                            '\u041C\u0435\u0441\u0442\u043E\u043F\u043E\u043B\u043E\u0436\u0435\u043D\u0438'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__isDeleted' },
+                            '\u0423\u0434\u0430\u043B\u0435\u043D\u0430'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__btnChange' },
+                            '\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C'
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'api__lectures__header__btnDelete\x7F' },
+                            '\u0423\u0434\u0430\u043B\u0438\u0442\u044C'
+                        )
+                    ),
                     this.state.lectures.map(function (el, index) {
-                        var dateSring = new Date(Number(el.date));
-                        // if (dateSring) {
-                        //
-                        // }
-
                         return _react2.default.createElement(DisplayLectures, {
                             key: index,
-                            fullDate: dateSring.getFullYear() + '-0' + dateSring.getMonth() + '-' + dateSring.getDate()
+                            fullDate: (0, _properDate2.default)(el.date),
+                            lecture: el.lecture,
+                            teacher: el.teacher.name,
+                            company: el.company,
+                            school: el.school.name,
+                            startTime: el.date,
+                            endTime: el.endTime,
+                            classRoom: el.classRoom.name,
+                            classRoomCapacity: el.classRoom.maxStudents,
+                            location: el.location,
+                            isDeleted: el.isDeleted
                         });
                     })
                 )
@@ -14108,18 +14184,72 @@ exports.default = API_GUI;
 
 
 function DisplayLectures(props) {
-    var fullDate = props.fullDate;
+    var fullDate = props.fullDate,
+        lecture = props.lecture,
+        teacher = props.teacher,
+        company = props.company,
+        school = props.school,
+        startTime = props.startTime,
+        endTime = props.endTime,
+        classRoom = props.classRoom,
+        classRoomCapacity = props.classRoomCapacity,
+        location = props.location,
+        isDeleted = props.isDeleted;
 
 
     return _react2.default.createElement(
         'div',
-        { className: 'lectures__lecture' },
-        _react2.default.createElement('input', { defaultValue: fullDate })
+        { className: 'api__lectures__line' },
+        _react2.default.createElement('input', { className: 'api__lectures__line__date', defaultValue: fullDate }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__lecture', defaultValue: lecture }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__teacher', defaultValue: teacher }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__company', defaultValue: company }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__school', defaultValue: school }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__startTime', defaultValue: (0, _time2.default)(startTime) }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__endTime', defaultValue: (0, _time2.default)(endTime) }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__classRoom', defaultValue: classRoom }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__classRoomCapacity', defaultValue: classRoomCapacity }),
+        _react2.default.createElement('input', { className: 'api__lectures__line__location', defaultValue: location }),
+        _react2.default.createElement(
+            'select',
+            { className: 'api__lectures__line__isDeleted', id: 'isDeleted' },
+            _react2.default.createElement(
+                'option',
+                null,
+                isDeleted.toString()
+            ),
+            _react2.default.createElement(
+                'option',
+                null,
+                (!isDeleted).toString()
+            )
+        ),
+        _react2.default.createElement(
+            'button',
+            { className: 'api__lectures__line__btnChange', id: 'changeBtn' },
+            '\u0418\u0437\u043C\u0435\u043D\u0438\u0442\u044C'
+        ),
+        _react2.default.createElement(
+            'button',
+            { className: 'api__lectures__line__btnDelete\x7F', id: 'deleteBtn' },
+            '\u0423\u0434\u0430\u043B\u0438\u0442\u044C'
+        )
     );
 }
 
 DisplayLectures.propTypes = {
-    fullDate: _react2.default.PropTypes.string.isRequired
+    fullDate: _react2.default.PropTypes.string.isRequired,
+    lecture: _react2.default.PropTypes.string.isRequired,
+    teacher: _react2.default.PropTypes.string.isRequired,
+    company: _react2.default.PropTypes.string.isRequired,
+    school: _react2.default.PropTypes.string.isRequired,
+    startTime: _react2.default.PropTypes.number.isRequired,
+    endTime: _react2.default.PropTypes.number.isRequired,
+    classRoom: _react2.default.PropTypes.string.isRequired,
+    classRoomCapacity: _react2.default.PropTypes.string.isRequired,
+    location: _react2.default.PropTypes.string.isRequired,
+    isDeleted: _react2.default.PropTypes.bool.isRequired
+
 };
 
 function Show(props) {
@@ -14338,7 +14468,7 @@ var ScheduleApp = function (_React$Component) {
                             _react2.default.createElement(
                                 'option',
                                 null,
-                                '\u0412\u0441\u0435'
+                                '\u0412\u0441\u0435 \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u0438'
                             ),
                             Object.keys(teachers).map(function (key, index) {
                                 return _react2.default.createElement(_filter2.default, {
@@ -14353,7 +14483,7 @@ var ScheduleApp = function (_React$Component) {
                             _react2.default.createElement(
                                 'option',
                                 { className: 'option' },
-                                '\u0412\u0441\u0435'
+                                '\u0412\u0441\u0435 \u0448\u043A\u043E\u043B\u044B'
                             ),
                             Object.keys(schools).map(function (key, index) {
                                 return _react2.default.createElement(_filter2.default, {
@@ -14368,7 +14498,7 @@ var ScheduleApp = function (_React$Component) {
                             _react2.default.createElement(
                                 'option',
                                 null,
-                                '\u0412\u0441\u0435'
+                                '\u0412\u0441\u0435 \u0430\u0443\u0434\u0438\u0442\u043E\u0440\u0438\u0438'
                             ),
                             Object.keys(classRooms).map(function (key, index) {
                                 return _react2.default.createElement(_filter2.default, {
@@ -14382,7 +14512,7 @@ var ScheduleApp = function (_React$Component) {
                         return _react2.default.createElement(_schedule2.default, {
                             key: index,
                             date: new Date(Number(el.date)).getDate(),
-                            month: (0, _convert2.default)(Number(el.date)),
+                            month: new Date(el.date).toLocaleString('ru', { month: 'long' }),
                             lecture: el.lecture,
                             teacher: el.teacher.name,
                             location: el.location,
@@ -14762,52 +14892,6 @@ function convert(date) {
 }
 
 /***/ }),
-<<<<<<< HEAD
-=======
-/* 125 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = getProperDate;
-function getProperDate(seconds) {
-    var month = new Date(seconds).getMonth();
-    if (month.toString().length === 1) {
-        // month = '0' + (month + 1);
-        month = month + 1;
-    }
-
-    var day = new Date(seconds).getDate();
-    // if (day.toString().length === 1) {
-    //     day = '0' + day;
-    // }
-
-    return new Date(seconds).getFullYear() + '-' + month + '-' + day;
-}
-
-/***/ }),
-/* 126 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = properTime;
-function properTime(fromSeconds) {
-  var minutes = new Date(+fromSeconds).getMinutes();
-
-  return new Date(+fromSeconds).getHours() + ":" + (minutes.toString().length == 1 ? minutes + "0" : minutes);
-};
-
-/***/ }),
->>>>>>> parent of 228cad2... вывел список лекций для редактирования и удаления
 /* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 

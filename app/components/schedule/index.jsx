@@ -116,7 +116,7 @@ export default class ScheduleApp extends React.Component {
                 </select>
 
                 <select id="teacher" className="input" onChange={this.filter}>
-                  <option>Все</option>
+                  <option>Все преподаватели</option>
                   {
                       Object.keys(teachers).map((key, index) => {
                           return (
@@ -128,7 +128,7 @@ export default class ScheduleApp extends React.Component {
                   }
                 </select>
                 <select id="school" className="input" onChange={this.filter}>
-                  <option className="option">Все</option>
+                  <option className="option">Все школы</option>
                   {
                       Object.keys(schools).map((key, index) => {
                           return (
@@ -140,7 +140,7 @@ export default class ScheduleApp extends React.Component {
                   }
                 </select>
                 <select id="classRoom" className="input" onChange={this.filter}>
-                  <option>Все</option>
+                  <option>Все аудитории</option>
                   {
                       Object.keys(classRooms).map((key, index) => {
                           return (
@@ -159,7 +159,7 @@ export default class ScheduleApp extends React.Component {
               <Schedule
                 key={index}
                 date={new Date(Number(el.date)).getDate()}
-                month={convert(Number(el.date))}
+                month={new Date(el.date).toLocaleString('ru', { month: 'long' })}
                 lecture={el.lecture}
                 teacher={el.teacher.name}
                 location={el.location}

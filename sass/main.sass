@@ -123,11 +123,50 @@ body
 	width: 150px
 
 .api
-    border: 2px solid black
-    width: 320px
-    margin: 0 auto
-    &__header
-        text-align: center
+	width: 320px
+	margin: 0 auto
+	&__header
+		text-align: center
+	&__lectures
+		margin: 0 auto
+		&__header
+			display: flex
+		&__line,
+		&__header,
+			box-sizing: border-box
+			margin: 0 auto
+			// display: flex
+			// justify-content: center
+			// flex-wrap: wrap
+			// flex-flow: row
+			&__date
+				// flex: 1 1 70px
+				width: 70px
+			&__lecture
+				// flex: 1 1 250px
+				width: 150px
+			&__teacher
+				width: 100px
+			&__company
+				width: 50px
+			&__school
+				width: 200px
+			&__startTime
+				width: 40px
+			&__endTime
+				width: 40px
+			&__classRoom
+				width: 100px
+			&__classRoomCapacity
+				width: 30px
+			&__location
+				width: 50px
+			&__isDeleted
+				width: 60px
+			&__btnChange
+				width: 70px
+			&__btnDelete
+				width: 70px
 
 input
     width: 98%

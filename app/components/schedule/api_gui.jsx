@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router';
 
 import API from '../../api/API.js';
+import getProperDate from '../../utils/properDate.js';
+import properTime from '../../utils/time.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -67,21 +69,38 @@ export default class API_GUI extends React.Component {
                 })
               }
             </section>
-            <section className="lectures">
+            <section className="api__lectures">
+              <div className="api__lectures__header">
+                <div className="api__lectures__header__date">Дата</div>
+                <div className="api__lectures__header__lecture">Лекция</div>
+                <div className="api__lectures__header__teacher">Преподаватель</div>
+                <div className="api__lectures__header__company">Компания</div>
+                <div className="api__lectures__header__school">Школа</div>
+                <div className="api__lectures__header__startTime">Начало</div>
+                <div className="api__lectures__header__endTime">Конец</div>
+                <div className="api__lectures__header__classRoom">Аудитория</div>
+                <div className="api__lectures__header__classRoomCapacity">Вместимость аудитории</div>
+                <div className="api__lectures__header__location">Местоположени</div>
+                <div className="api__lectures__header__isDeleted">Удалена</div>
+                <div className="api__lectures__header__btnChange">Изменить</div>
+                <div className="api__lectures__header__btnDelete">Удалить</div>
+              </div>
               {
                 this.state.lectures.map((el, index) => {
-                    const dateSring = new Date(Number(el.date));
-                    // if (dateSring) {
-                    //
-                    // }
-
                     return (
                       <DisplayLectures
                         key={index}
-                        fullDate={
-                            dateSring.getFullYear() + '-0' +
-                            dateSring.getMonth() + '-' +
-                            dateSring.getDate()}
+                        fullDate={getProperDate(el.date)}
+                        lecture={el.lecture}
+                        teacher={el.teacher.name}
+                        company={el.company}
+                        school={el.school.name}
+                        startTime={el.date}
+                        endTime={el.endTime}
+                        classRoom={el.classRoom.name}
+                        classRoomCapacity={el.classRoom.maxStudents}
+                        location={el.location}
+                        isDeleted={el.isDeleted}
                         />
                     );
                 })
@@ -94,25 +113,44 @@ export default class API_GUI extends React.Component {
 }
 
 function DisplayLectures(props) {
-    const {fullDate} = props;
+    const {fullDate, lecture, teacher, company, school, startTime, endTime, classRoom, classRoomCapacity, location, isDeleted} = props;
 
     return (
-      <div className="lectures__lecture">
-        <input defaultValue={fullDate}/>
-        {/* <div>Date to</div>
-        <div>Lecture name</div>
-        <div>Teacher</div>
-        <div>Company</div>
-        <div>School</div>
-        <div>Class Room</div>
-        <div>Class Room Capacity</div>
-        <div>Location</div> */}
+      <div className="api__lectures__line">
+        <input className="api__lectures__line__date" defaultValue={fullDate}/>
+        <input className="api__lectures__line__lecture" defaultValue={lecture}/>
+        <input className="api__lectures__line__teacher" defaultValue={teacher}/>
+        <input className="api__lectures__line__company" defaultValue={company}/>
+        <input className="api__lectures__line__school" defaultValue={school}/>
+        <input className="api__lectures__line__startTime" defaultValue={properTime(startTime)}/>
+        <input className="api__lectures__line__endTime" defaultValue={properTime(endTime)}/>
+        <input className="api__lectures__line__classRoom" defaultValue={classRoom}/>
+        <input className="api__lectures__line__classRoomCapacity" defaultValue={classRoomCapacity}/>
+        <input className="api__lectures__line__location" defaultValue={location}/>
+        {/* <input defaultValue={isDeleted}/> */}
+        <select className="api__lectures__line__isDeleted" id="isDeleted">
+          <option>{isDeleted.toString()}</option>
+          <option>{(!isDeleted).toString()}</option>
+        </select>
+        <button className="api__lectures__line__btnChange" id="changeBtn">Изменить</button>
+        <button className="api__lectures__line__btnDelete" id="deleteBtn">Удалить</button>
       </div>
     );
 }
 
 DisplayLectures.propTypes = {
     fullDate: React.PropTypes.string.isRequired,
+    lecture: React.PropTypes.string.isRequired,
+    teacher: React.PropTypes.string.isRequired,
+    company: React.PropTypes.string.isRequired,
+    school: React.PropTypes.string.isRequired,
+    startTime: React.PropTypes.number.isRequired,
+    endTime: React.PropTypes.number.isRequired,
+    classRoom: React.PropTypes.string.isRequired,
+    classRoomCapacity: React.PropTypes.string.isRequired,
+    location: React.PropTypes.string.isRequired,
+    isDeleted: React.PropTypes.bool.isRequired,
+
 };
 
 function Show(props) {

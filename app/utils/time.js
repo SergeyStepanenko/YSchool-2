@@ -1,5 +1,5 @@
-export default function properTime(fromSeconds) {
-    const minutes = new Date(+fromSeconds).getMinutes();
+export default function properTime(seconds) {
+    const minutes = new Date(Number(seconds)).getMinutes();
 
-	return new Date(+fromSeconds).getHours() + ":" + ((minutes.toString().length == 1) ? minutes + "0" : minutes);
-};
+    return new Date(Number(seconds)).getHours() + ':' + ((minutes.toString().length === 1) ? minutes + '0' : minutes);
+}

@@ -3,7 +3,6 @@ import {Link} from 'react-router';
 
 import API from '../../api/API.js';
 import getProperDate from '../../utils/properDate.js';
-import properTime from '../../utils/time.js';
 
 const database = firebase.database();
 const rootRef = database.ref('lectures');
@@ -70,21 +69,6 @@ export default class API_GUI extends React.Component {
               }
             </section>
             <section className="api__lectures">
-              <div className="api__lectures__header">
-                <div className="api__lectures__header__date">Дата</div>
-                <div className="api__lectures__header__lecture">Лекция</div>
-                <div className="api__lectures__header__teacher">Преподаватель</div>
-                <div className="api__lectures__header__company">Компания</div>
-                <div className="api__lectures__header__school">Школа</div>
-                <div className="api__lectures__header__startTime">Начало</div>
-                <div className="api__lectures__header__endTime">Конец</div>
-                <div className="api__lectures__header__classRoom">Аудитория</div>
-                <div className="api__lectures__header__classRoomCapacity">Вместимость аудитории</div>
-                <div className="api__lectures__header__location">Местоположени</div>
-                <div className="api__lectures__header__isDeleted">Удалена</div>
-                <div className="api__lectures__header__btnChange">Изменить</div>
-                <div className="api__lectures__header__btnDelete">Удалить</div>
-              </div>
               {
                 this.state.lectures.map((el, index) => {
                     return (
@@ -117,23 +101,19 @@ function DisplayLectures(props) {
 
     return (
       <div className="api__lectures__line">
-        <input className="api__lectures__line__date" defaultValue={fullDate}/>
-        <input className="api__lectures__line__lecture" defaultValue={lecture}/>
-        <input className="api__lectures__line__teacher" defaultValue={teacher}/>
-        <input className="api__lectures__line__company" defaultValue={company}/>
-        <input className="api__lectures__line__school" defaultValue={school}/>
-        <input className="api__lectures__line__startTime" defaultValue={properTime(startTime)}/>
-        <input className="api__lectures__line__endTime" defaultValue={properTime(endTime)}/>
-        <input className="api__lectures__line__classRoom" defaultValue={classRoom}/>
-        <input className="api__lectures__line__classRoomCapacity" defaultValue={classRoomCapacity}/>
-        <input className="api__lectures__line__location" defaultValue={location}/>
-        {/* <input defaultValue={isDeleted}/> */}
-        <select className="api__lectures__line__isDeleted" id="isDeleted">
-          <option>{isDeleted.toString()}</option>
-          <option>{(!isDeleted).toString()}</option>
-        </select>
-        <button className="api__lectures__line__btnChange" id="changeBtn">Изменить</button>
-        <button className="api__lectures__line__btnDelete" id="deleteBtn">Удалить</button>
+        <input defaultValue={fullDate}/>
+        <input id="lecture" defaultValue={lecture}/>
+        <input defaultValue={teacher}/>
+        <input defaultValue={company}/>
+        <input defaultValue={school}/>
+        <input defaultValue={startTime}/>
+        <input defaultValue={endTime}/>
+        <input defaultValue={classRoom}/>
+        <input defaultValue={classRoomCapacity}/>
+        <input defaultValue={location}/>
+        <input defaultValue={isDeleted}/>
+        <button id="changeBtn">Change</button>
+        <button id="deleteBtn">Delete</button>
       </div>
     );
 }
@@ -144,12 +124,12 @@ DisplayLectures.propTypes = {
     teacher: React.PropTypes.string.isRequired,
     company: React.PropTypes.string.isRequired,
     school: React.PropTypes.string.isRequired,
-    startTime: React.PropTypes.number.isRequired,
-    endTime: React.PropTypes.number.isRequired,
+    startTime: React.PropTypes.string.isRequired,
+    endTime: React.PropTypes.string.isRequired,
     classRoom: React.PropTypes.string.isRequired,
     classRoomCapacity: React.PropTypes.string.isRequired,
     location: React.PropTypes.string.isRequired,
-    isDeleted: React.PropTypes.bool.isRequired,
+    isDeleted: React.PropTypes.string.isRequired,
 
 };
 

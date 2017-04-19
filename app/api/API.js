@@ -190,6 +190,7 @@ class API {
         if (schoolId) { // если id школы найден - мы ищем лекции в базе, которые идут у этой школы и сверяем по времени, есть ли пересечения
             const noIntersections = matchLectures(SCHOOLS, LECTURES, schoolId, secFrom, secTo);
             if (!noIntersections) { // если есть пересечения - выводим ошибку
+                // console.log(noIntersections);
                 errArr.push('У этой школы в это время идет другая лекция');
 
                 return false;

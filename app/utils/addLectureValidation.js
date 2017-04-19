@@ -64,8 +64,10 @@ export function matchLectures(entity, database, id, secFrom, secTo) {
     Object.keys(entity).map((key) => {
         const IdsArr = entity[key].lectures;
         for (let i = 0; i < IdsArr.length; i++) {
-            if (!checkIntersection(secFrom, secTo, database[IdsArr[i]].date, database[IdsArr[i]].endTime)) {
-                trueOrFalse = false;
+            if (id === entity[key].id) { // если id (преподавателя\лекции\школы совпадает с id в базе - проводится сверка по времени)
+                if (!checkIntersection(secFrom, secTo, database[IdsArr[i]].date, database[IdsArr[i]].endTime)) {
+                    trueOrFalse = false;
+                }
             }
         }
 

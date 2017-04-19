@@ -5328,6 +5328,7 @@ var API = function () {
                 var _noIntersections = (0, _addLectureValidation.matchLectures)(SCHOOLS, LECTURES, schoolId, secFrom, secTo);
                 if (!_noIntersections) {
                     // если есть пересечения - выводим ошибку
+                    // console.log(noIntersections);
                     errArr.push('У этой школы в это время идет другая лекция');
 
                     return false;
@@ -14050,11 +14051,11 @@ var API_GUI = function (_React$Component) {
                     '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u043B\u0435\u043A\u0446\u0438\u0438',
                     _react2.default.createElement('br', null),
                     ' ',
-                    _react2.default.createElement('input', { id: 'date', type: 'date', defaultValue: '2016-10-18', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443' }),
+                    _react2.default.createElement('input', { id: 'date', type: 'date', defaultValue: '2016-10-25', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443' }),
                     _react2.default.createElement('br', null),
-                    _react2.default.createElement('input', { id: 'lecture', type: 'text', defaultValue: '\u0422\u0435\u0441\u0442 \u043B\u0435\u043A\u0446\u0438\u044F', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043B\u0435\u043A\u0446\u0438\u044E' }),
+                    _react2.default.createElement('input', { id: 'lecture', type: 'text', defaultValue: '\u041B\u0435\u043A\u0446\u0438\u044F 3. \u041E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u043C\u043E\u0431\u0438\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u043E\u0432', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043B\u0435\u043A\u0446\u0438\u044E' }),
                     _react2.default.createElement('br', null),
-                    _react2.default.createElement('input', { id: 'teacher', type: 'text', defaultValue: '\u0410\u043D\u0442\u043E\u043D \u0422\u0435\u043D', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435   \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F' }),
+                    _react2.default.createElement('input', { id: 'teacher', type: 'text', defaultValue: '\u0412\u0430\u0441\u044E\u043D\u0438\u043D \u041D\u0438\u043A\u043E\u043B\u0430\u0439', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435   \u043F\u0440\u0435\u043F\u043E\u0434\u0430\u0432\u0430\u0442\u0435\u043B\u044F' }),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement('input', { id: 'company', type: 'text', defaultValue: '\u042F\u043D\u0434\u0435\u043A\u0441', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043A\u043E\u043C\u043F\u0430\u043D\u0438\u044E' }),
                     _react2.default.createElement('br', null),
@@ -14841,8 +14842,11 @@ function matchLectures(entity, database, id, secFrom, secTo) {
     Object.keys(entity).map(function (key) {
         var IdsArr = entity[key].lectures;
         for (var i = 0; i < IdsArr.length; i++) {
-            if (!checkIntersection(secFrom, secTo, database[IdsArr[i]].date, database[IdsArr[i]].endTime)) {
-                trueOrFalse = false;
+            if (id === entity[key].id) {
+                // если id (преподавателя\лекции\школы совпадает с id в базе - проводится сверка по времени)
+                if (!checkIntersection(secFrom, secTo, database[IdsArr[i]].date, database[IdsArr[i]].endTime)) {
+                    trueOrFalse = false;
+                }
             }
         }
 

@@ -50,7 +50,13 @@ function checkIntersection(newStart, newEnd, existStart, existEnd) {
 }
 
 export function matchByName(entity, inputVal) {
-    const foundObj = Object.values(entity).find((obj) => obj.name === inputVal);
+    // const foundObj = Object.values(entity).find((obj) => obj.name === inputVal); // Object.values не работает в IE
+    let foundObj;
+    Object.keys(entity).map((key) => {
+        if (entity[key].name === inputVal) foundObj = entity[key];
+
+        return foundObj;
+    });
 
     if (foundObj) { // если ID в базе школ найден, тогда присваиваем его переменной
         return foundObj.id;

@@ -48,7 +48,7 @@ export default class API_GUI extends React.Component {
             <Link to="/">Back</Link>
             <section className="api">
               <h1 className="api__header">API Graphic User Interface</h1><br/>
-              Введите дату лекции<br/> <input id="date" type="date" defaultValue="2016-10-25" placeholder="Введите дату"/><br/>
+              Введите дату лекции<br/> <input id="date" type="text" defaultValue="2016-10-25" placeholder="Введите дату"/><br/>
               <input id="lecture" type="text" defaultValue="Лекция 3. Особенности проектирования мобильных интерфейсов" placeholder="Введите лекцию"/><br/>
               <input id="teacher" type="text" defaultValue="Васюнин Николай" placeholder="Введите   преподавателя"/><br/>
               <input id="company" type="text" defaultValue="Яндекс" placeholder="Введите компанию"/><br/>
@@ -98,7 +98,7 @@ export default class API_GUI extends React.Component {
                         startTime={el.date}
                         endTime={el.endTime}
                         classRoom={el.classRoom.name}
-                        classRoomCapacity={el.classRoom.maxStudents}
+                        classRoomCapacity={Number(el.classRoom.maxStudents)}
                         location={el.location}
                         isDeleted={el.isDeleted}
                         />
@@ -127,7 +127,6 @@ function DisplayLectures(props) {
         <input className="api__lectures__line__classRoom" defaultValue={classRoom}/>
         <input className="api__lectures__line__classRoomCapacity" defaultValue={classRoomCapacity}/>
         <input className="api__lectures__line__location" defaultValue={location}/>
-        {/* <input defaultValue={isDeleted}/> */}
         <select className="api__lectures__line__isDeleted" id="isDeleted">
           <option>{isDeleted.toString()}</option>
           <option>{(!isDeleted).toString()}</option>
@@ -147,7 +146,7 @@ DisplayLectures.propTypes = {
     startTime: React.PropTypes.number.isRequired,
     endTime: React.PropTypes.number.isRequired,
     classRoom: React.PropTypes.string.isRequired,
-    classRoomCapacity: React.PropTypes.string.isRequired,
+    classRoomCapacity: React.PropTypes.number.isRequired,
     location: React.PropTypes.string.isRequired,
     isDeleted: React.PropTypes.bool.isRequired,
 

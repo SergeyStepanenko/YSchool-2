@@ -14051,7 +14051,7 @@ var API_GUI = function (_React$Component) {
                     '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443 \u043B\u0435\u043A\u0446\u0438\u0438',
                     _react2.default.createElement('br', null),
                     ' ',
-                    _react2.default.createElement('input', { id: 'date', type: 'date', defaultValue: '2016-10-25', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443' }),
+                    _react2.default.createElement('input', { id: 'date', type: 'text', defaultValue: '2016-10-25', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0434\u0430\u0442\u0443' }),
                     _react2.default.createElement('br', null),
                     _react2.default.createElement('input', { id: 'lecture', type: 'text', defaultValue: '\u041B\u0435\u043A\u0446\u0438\u044F 3. \u041E\u0441\u043E\u0431\u0435\u043D\u043D\u043E\u0441\u0442\u0438 \u043F\u0440\u043E\u0435\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F \u043C\u043E\u0431\u0438\u043B\u044C\u043D\u044B\u0445 \u0438\u043D\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u043E\u0432', placeholder: '\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043B\u0435\u043A\u0446\u0438\u044E' }),
                     _react2.default.createElement('br', null),
@@ -14168,7 +14168,7 @@ var API_GUI = function (_React$Component) {
                             startTime: el.date,
                             endTime: el.endTime,
                             classRoom: el.classRoom.name,
-                            classRoomCapacity: el.classRoom.maxStudents,
+                            classRoomCapacity: Number(el.classRoom.maxStudents),
                             location: el.location,
                             isDeleted: el.isDeleted
                         });
@@ -14247,7 +14247,7 @@ DisplayLectures.propTypes = {
     startTime: _react2.default.PropTypes.number.isRequired,
     endTime: _react2.default.PropTypes.number.isRequired,
     classRoom: _react2.default.PropTypes.string.isRequired,
-    classRoomCapacity: _react2.default.PropTypes.string.isRequired,
+    classRoomCapacity: _react2.default.PropTypes.number.isRequired,
     location: _react2.default.PropTypes.string.isRequired,
     isDeleted: _react2.default.PropTypes.bool.isRequired
 
@@ -14825,8 +14825,12 @@ function checkIntersection(newStart, newEnd, existStart, existEnd) {
 }
 
 function matchByName(entity, inputVal) {
-    var foundObj = Object.values(entity).find(function (obj) {
-        return obj.name === inputVal;
+    // const foundObj = Object.values(entity).find((obj) => obj.name === inputVal); // Object.values не работает в IE
+    var foundObj = void 0;
+    Object.keys(entity).map(function (key) {
+        if (entity[key].name === inputVal) foundObj = entity[key];
+
+        return foundObj;
     });
 
     if (foundObj) {

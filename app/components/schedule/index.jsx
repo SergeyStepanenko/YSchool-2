@@ -70,8 +70,8 @@ export default class ScheduleApp extends React.Component {
     }
 
     filter() {
-        const isIE = /*@cc_on!@*/false || !!document.documentMode;
-        const isEdge = !isIE && !!window.StyleMedia;
+        const isIE = /*@cc_on!@*/false || !!document.documentMode; // распознаем IE
+        const isEdge = !isIE && !!window.StyleMedia; // распознаем EDGE
         let dateTo;
         let dateFrom;
 
@@ -170,7 +170,7 @@ export default class ScheduleApp extends React.Component {
               <Schedule
                 key={index}
                 date={new Date(Number(el.date)).getDate()}
-                month={new Date(el.date).toLocaleString('ru', { month: 'long' })}
+                month={convert(el.date)}
                 lecture={el.lecture}
                 teacher={el.teacher.name}
                 location={el.location}

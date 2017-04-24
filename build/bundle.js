@@ -14403,8 +14403,8 @@ var ScheduleApp = function (_React$Component) {
     }, {
         key: 'filter',
         value: function filter() {
-            var isIE = /*@cc_on!@*/false || !!document.documentMode;
-            var isEdge = !isIE && !!window.StyleMedia;
+            var isIE = /*@cc_on!@*/false || !!document.documentMode; // распознаем IE
+            var isEdge = !isIE && !!window.StyleMedia; // распознаем EDGE
             var dateTo = void 0;
             var dateFrom = void 0;
 
@@ -14525,7 +14525,7 @@ var ScheduleApp = function (_React$Component) {
                         return _react2.default.createElement(_schedule2.default, {
                             key: index,
                             date: new Date(Number(el.date)).getDate(),
-                            month: new Date(el.date).toLocaleString('ru', { month: 'long' }),
+                            month: (0, _convert2.default)(el.date),
                             lecture: el.lecture,
                             teacher: el.teacher.name,
                             location: el.location,
@@ -14892,21 +14892,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = convert;
 function convert(date) {
-    var m = new Date(date).toLocaleString('ru', { month: 'long' });
+    var m = new Date(date).toLocaleString('ru', { month: 'long' }).toLowerCase();
     var n = void 0;
 
-    m === 'январь' ? n = 'января' : false;
-    m === 'февраль' ? n = 'февраля' : false;
-    m === 'март' ? n = 'марта' : false;
-    m === 'апрель' ? n = 'апреля' : false;
-    m === 'май' ? n = 'мая' : false;
-    m === 'июнь' ? n = 'июня' : false;
-    m === 'июль' ? n = 'июля' : false;
-    m === 'август' ? n = 'августа' : false;
-    m === 'сентябрь' ? n = 'сентября' : false;
-    m === 'октябрь' ? n = 'октября' : false;
-    m === 'ноябрь' ? n = 'ноября' : false;
-    m === 'декабрь' ? n = 'декабря' : false;
+    if (m === 'январь') n = 'января';
+    if (m === 'февраль') n = 'февраля';
+    if (m === 'март') n = 'марта';
+    if (m === 'апрель') n = 'апреля';
+    if (m === 'май') n = 'мая';
+    if (m === 'июнь') n = 'июня';
+    if (m === 'июль') n = 'июля';
+    if (m === 'август') n = 'августа';
+    if (m === 'сентябрь') n = 'сентября';
+    if (m === '‎октябрь') n = '‎октября';
+    if (m === 'октябрь') n = '‎октября'; // исправляю багу в IE/EDGE
+    if (m === '‎ноябрь') n = 'ноября';
+    if (m === 'ноябрь') n = 'ноября';
+    if (m === 'декабрь') n = 'декабря';
 
     return n;
 }

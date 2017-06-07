@@ -2,16 +2,24 @@
 @import "vars"
 @import "media"
 
+.api__lectures
+	display: none
+
 body
 	font-size: 14px
 	font-family: $default-font
 	overflow-x: hidden
-	background: #feb645 /* Old browsers */
-	background: -moz-linear-gradient(top,  #feb645 29%, #fa993b 65%, #fa993b 65%, #fa993b 74%); /* FF3.6-15 */
-	background: -webkit-linear-gradient(top,  #feb645 29%,#fa993b 65%,#fa993b 65%,#fa993b 74%); /* Chrome10-25,Safari5.1-6 */
-	background: linear-gradient(to bottom,  #feb645 29%,#fa993b 65%,#fa993b 65%,#fa993b 74%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feb645', endColorstr='#fa993b',GradientType=0 ); /* IE6-9 */
-	background-size: 100% 100%
+	// background: #feb645 /* Old browsers */
+	background: #FA9B3B /* Old browsers */
+	// background: -moz-linear-gradient(top,  #feb645 29%, #fa993b 65%, #fa993b 65%, #fa993b 74%); /* FF3.6-15 */
+	// background: -webkit-linear-gradient(top,  #feb645 29%,#fa993b 65%,#fa993b 65%,#fa993b 74%); /* Chrome10-25,Safari5.1-6 */
+	// background: linear-gradient(to bottom,  #feb645 29%,#fa993b 65%,#fa993b 65%,#fa993b 74%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	// filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#feb645', endColorstr='#fa993b',GradientType=0 ); /* IE6-9 */
+	// background-size: cover
+
+a
+    color: #fff
+    text-decoration: none
 
 .header,
 .schedule-container
@@ -65,8 +73,6 @@ body
 		font-size: 18px
 	&__lecturer
 		font-size: 12px
-		a
-			text-decoration: none
 	&__company
 		font-size: 11px
 		color: #e28315
@@ -180,7 +186,8 @@ input
     margin: 0 auto
     width: 100%
 
-
+.switch
+	color: black !important
 
 
 

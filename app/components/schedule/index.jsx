@@ -98,7 +98,7 @@ export default class ScheduleApp extends React.Component {
     render() {
         return (
           <div>
-            <Link to="api">API</Link>
+            <Link to="api" className='switch'>Добавить лекцию</Link>
             <div className="schedule-container">
               <div className="schedule-container__filters">
                 <select id="dateFrom" className="input" onChange={this.filter}>

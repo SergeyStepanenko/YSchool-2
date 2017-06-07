@@ -45,7 +45,7 @@ export default class API_GUI extends React.Component {
     render() {
         return (
           <div>
-            <Link to="/">Back</Link>
+            <Link to="/" className='switch'>Назад</Link>
             <section className="api">
               <h1 className="api__header">API Graphic User Interface</h1><br/>
               Введите дату лекции<br/> <input id="date" type="text" defaultValue="2016-10-25" placeholder="Введите дату"/><br/>
